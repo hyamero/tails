@@ -1,6 +1,5 @@
 import { relations, sql } from "drizzle-orm";
 import {
-  bigint,
   index,
   int,
   mysqlTableCreator,
@@ -19,25 +18,68 @@ import { type AdapterAccount } from "next-auth/adapters";
  */
 export const createTable = mysqlTableCreator((name) => `tails_${name}`);
 
+/**
+ * Posts
+ */
+
 export const posts = createTable(
   "post",
   {
-    id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
-    name: varchar("name", { length: 256 }),
-    createdById: varchar("createdById", { length: 255 }).notNull(),
+    id: varchar("id", { length: 255 }).notNull().primaryKey(),
+    authorId: varchar("authorId", { length: 255 }).notNull(),
+    parentId: varchar("parentId", { length: 255 }),
+    content: varchar("content", { length: 500 }),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
   },
-  (example) => ({
-    createdByIdIdx: index("createdById_idx").on(example.createdById),
-    nameIndex: index("name_idx").on(example.name),
-  })
+  (post) => ({
+    authorIdIdx: index("authorId_idx").on(post.authorId),
+    parentIdIdx: index("parentId_idx").on(post.parentId),
+  }),
 );
+
+export const postsRelations = relations(posts, ({ one, many }) => ({
+  author: one(users, { fields: [posts.authorId], references: [users.id] }),
+  likes: many(likes),
+  posts: one(posts, {
+    fields: [posts.parentId],
+    references: [posts.id],
+    relationName: "replies",
+  }),
+  replies: many(posts, { relationName: "replies" }),
+}));
+
+/**
+ * Likes
+ */
+
+export const likes = createTable(
+  "like",
+  {
+    userId: varchar("userId", { length: 255 }).notNull(),
+    postId: varchar("postId", { length: 255 }).notNull(),
+  },
+  (like) => {
+    return {
+      compoundKey: primaryKey({
+        columns: [like.userId, like.postId],
+      }),
+      userIdIdx: index("userId_idx").on(like.userId),
+      postIdIdx: index("postId_idx").on(like.postId),
+    };
+  },
+);
+
+export const likesRelations = relations(likes, ({ one }) => ({
+  user: one(users, { fields: [likes.userId], references: [users.id] }),
+  post: one(posts, { fields: [likes.postId], references: [posts.id] }),
+}));
 
 export const users = createTable("user", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
+  username: varchar("username", { length: 30 }).unique(),
   name: varchar("name", { length: 255 }),
   email: varchar("email", { length: 255 }).notNull(),
   emailVerified: timestamp("emailVerified", {
@@ -74,7 +116,7 @@ export const accounts = createTable(
       columns: [account.provider, account.providerAccountId],
     }),
     userIdIdx: index("accounts_userId_idx").on(account.userId),
-  })
+  }),
 );
 
 export const accountsRelations = relations(accounts, ({ one }) => ({
@@ -92,7 +134,7 @@ export const sessions = createTable(
   },
   (session) => ({
     userIdIdx: index("session_userId_idx").on(session.userId),
-  })
+  }),
 );
 
 export const sessionsRelations = relations(sessions, ({ one }) => ({
@@ -108,5 +150,5 @@ export const verificationTokens = createTable(
   },
   (vt) => ({
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
-  })
+  }),
 );
