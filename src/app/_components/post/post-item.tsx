@@ -4,26 +4,27 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { api } from "~/trpc/react";
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
 
 import type { Post } from "~/lib/types";
+import { PiChatCircle, PiHeart, PiHeartFill } from "react-icons/pi";
 import { formatDistance } from "~/hooks/format-distance";
 import { formatDistanceToNowStrict, formatRelative } from "date-fns";
 
-import {
-  PiChatCircle,
-  PiDotsThree,
-  PiHeart,
-  PiHeartFill,
-} from "react-icons/pi";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
+import { PostDropdownMenu } from "./post-dropdown-menu";
+
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
   TooltipProvider,
 } from "../ui/tooltip";
+
+import { useBoundStore } from "~/lib/use-bound-store";
+import { ProfileHoverCard } from "../profile/profile-hovercard";
+import { ViewLikes } from "./view-likes";
+import { useSession } from "next-auth/react";
 
 type PostItemProps = {
   post: Post;
@@ -35,6 +36,10 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
 
   const router = useRouter();
   const pathname = usePathname();
+
+  const toggleCommentFormIsOpen = useBoundStore(
+    (state) => state.modalActions.toggleCommentFormIsOpen,
+  );
 
   const [likedByUser, setLikedByUser] = useState(post.likedByUser);
   const [likeCount, setLikeCount] = useState(post.likes);
@@ -72,7 +77,28 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
     toggleLike.mutate({ postId: post.id });
   };
 
-  const username = post.author.username
+  const repliesWord =
+    post.replies === 0 ? "" : post.replies === 1 ? "reply" : "replies";
+
+  const handleReply = () => {
+    if (!session) {
+      toast("Not logged in?", {
+        description: "You must be logged in to like a post.",
+        action: {
+          label: "Sign In",
+          onClick: () => router.push("/api/auth/signin"),
+        },
+      });
+
+      return;
+    }
+
+    toggleCommentFormIsOpen(post);
+
+    toggleLike.mutate({ postId: post.id });
+  };
+
+  const userSlug = post.author.username
     ? "@" + post.author.username
     : post.authorId;
 
@@ -81,9 +107,14 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
 
   return (
     <>
+      <ViewLikes
+        postId={post.id}
+        likesModalIsOpen={likesModalIsOpen}
+        setLikesModalIsOpen={setLikesModalIsOpen}
+      />
       <div className="flex items-start justify-between border-b py-5 text-[#f2f4f6] last:border-0">
         <div className="flex w-full items-start gap-3">
-          <Link href={`/user/${username}`} className="font-semibold">
+          <Link href={`/user/${userSlug}`} className="font-semibold">
             <Avatar className="relative top-1">
               <AvatarImage
                 className="rounded-full"
@@ -98,6 +129,15 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
 
           <div className="w-full">
             <div className="flex justify-between">
+              <ProfileHoverCard author={post.author} userId={session?.user.id}>
+                <Link
+                  href={`/user/${userSlug}`}
+                  className="font-semibold hover:underline"
+                >
+                  {post.author.name}
+                </Link>
+              </ProfileHoverCard>
+
               <div className="flex items-center gap-2">
                 <TooltipProvider>
                   <Tooltip>
@@ -117,14 +157,21 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-
-                <PiDotsThree className="text-2xl" />
+                {/* 
+               DropDownMenu
+              */}
+                {postType === "post" && (
+                  <PostDropdownMenu
+                    postId={post.id}
+                    postAuthor={post.authorId}
+                  />
+                )}
               </div>
             </div>
 
             {!pathname.includes("/post") && postType === "post" ? (
               <Link
-                href={`/user/${username}/post/${post.id}`}
+                href={`/user/${userSlug}/post/${post.id}`}
                 className="whitespace-pre-wrap"
               >
                 {post.content}
@@ -153,14 +200,14 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
                     title="comment"
                     type="button"
                     className="rounded-full p-[0.4rem] transition-colors duration-200 hover:bg-zinc-900"
-                    // onClick={handleReply}
+                    onClick={handleReply}
                   >
                     <PiChatCircle className="text-2xl" />
                   </button>
                 </div>
 
                 <div className="space-x-3">
-                  {/* {!pathname.includes(post.id) && post.replies ? (
+                  {!pathname.includes(post.id) && post.replies ? (
                     <Link
                       className="text-zinc-500"
                       href={`/user/${
@@ -169,7 +216,7 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
                     >
                       {post.replies + " " + repliesWord}
                     </Link>
-                  ) : null} */}
+                  ) : null}
                   <span
                     className="cursor-pointer text-zinc-500"
                     onClick={() => setLikesModalIsOpen(!likesModalIsOpen)}

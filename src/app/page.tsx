@@ -1,29 +1,100 @@
-import { unstable_noStore as noStore } from "next/cache";
-import Link from "next/link";
+"use client";
 
-import { getServerAuthSession } from "~/server/auth";
+import React, { useEffect } from "react";
+import { toast } from "sonner";
 
-export default async function Home() {
-  noStore();
-  const session = await getServerAuthSession();
+import { api } from "~/trpc/react";
+import { PostItem } from "./_components/post/post-item";
+import { CreatePost } from "./_components/post/create-post";
+import { DeletePostModal } from "./_components/modal/modals";
+import { useInView } from "react-intersection-observer";
+import Loading, { LoadingSkeleton } from "~/app/feed-loading";
+import { useBoundStore } from "~/lib/use-bound-store";
+import { CreateComment } from "./_components/comment/create-comment";
+import { useSession } from "next-auth/react";
+import { type Post } from "~/lib/types";
+
+type PostsProps = {
+  authorId?: string;
+  postId?: string;
+};
+
+export default function Page({ authorId, postId }: PostsProps) {
+  const { data: session } = useSession();
+  const tempPosts = useBoundStore((state) => state.tempPosts);
+  const deletedPosts = useBoundStore((state) => state.deletedPosts);
+
+  const { ref, inView } = useInView();
+
+  const {
+    data: posts,
+    isLoading,
+    isError,
+    error,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = api.post.inifiniteFeed.useInfiniteQuery(
+    { author: authorId ?? undefined, postId: postId ?? undefined },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextPageCursor ?? undefined,
+    },
+  );
+
+  /**
+   * Fetch next page when the user scrolls to the bottom of the page.
+   */
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage().catch((err) => console.log(err));
+    }
+  }, [fetchNextPage, inView]);
+
+  if (isError) toast.error(error.message);
+  if (isLoading) return <Loading />;
+  if (posts?.pages.length === 0) return <p>No posts found.</p>;
+
+  const existsInTempPosts = (postId: string) => {
+    const tempPostId = tempPosts.find((post) => post.id === postId);
+
+    if (tempPostId) return true;
+    else return false;
+  };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-background text-primary">
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-        <div className="flex flex-col items-center gap-2">
-          <div className="flex flex-col items-center justify-center gap-4">
-            <p className="text-center text-2xl text-white">
-              {session && <span>Logged in as {session.user?.name}</span>}
-            </p>
-            <Link
-              href={session ? "/signout" : "/signin"}
-              className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
-            >
-              {session ? "Sign out" : "Sign in"}
-            </Link>
-          </div>
+    <div className="pb-24 md:pb-0">
+      <CreatePost onProfilePage={authorId ?? postId ? true : false} />
+      <CreateComment />
+      <DeletePostModal />
+
+      {session && tempPosts.length !== 0
+        ? tempPosts
+            .filter((post) => !deletedPosts.includes(post.id))
+            .map((post) => {
+              return <PostItem key={post.id} post={post as Post} />;
+            })
+        : null}
+
+      {posts?.pages.map((page, i) => (
+        <React.Fragment key={page.nextPageCursor?.id ?? i}>
+          {page.posts
+            .filter(
+              (post) =>
+                !deletedPosts.includes(post.id) && !existsInTempPosts(post.id),
+            )
+            .map((post) => (
+              <PostItem key={post.id} post={post} />
+            ))}
+        </React.Fragment>
+      ))}
+
+      {/* Ref for react-intersection-observer */}
+      <div ref={ref} className="pt-2"></div>
+
+      {isFetchingNextPage && (
+        <div className="py-5">
+          <LoadingSkeleton />
         </div>
-      </div>
-    </main>
+      )}
+    </div>
   );
 }
