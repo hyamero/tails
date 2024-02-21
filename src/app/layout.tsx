@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import { TRPCReactProvider } from "~/trpc/react";
 import { getServerAuthSession } from "~/server/auth";
 import AuthProvider from "./context/client-auth-provider";
+import { LoginModal } from "./_components/modal/modals";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -29,7 +30,12 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
         <TRPCReactProvider>
-          <AuthProvider session={session}>{children}</AuthProvider>
+          <AuthProvider session={session}>
+            <LoginModal />
+            <div className="mx-auto w-full max-w-lg pt-24 xl:max-w-xl">
+              {children}
+            </div>
+          </AuthProvider>
         </TRPCReactProvider>
       </body>
     </html>
