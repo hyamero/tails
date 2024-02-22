@@ -6,6 +6,9 @@ import { TRPCReactProvider } from "~/trpc/react";
 import { getServerAuthSession } from "~/server/auth";
 import AuthProvider from "./context/client-auth-provider";
 import { LoginModal } from "./_components/modal/modals";
+import { api } from "~/trpc/server";
+import { type User } from "~/lib/types";
+import { Navbar } from "./_components/navbar";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,11 +29,22 @@ export default async function RootLayout({
 }) {
   const session = await getServerAuthSession();
 
+  const sessionUser =
+    session &&
+    ((await api.user.getUser.query({
+      id: session?.user?.id ?? "",
+      columns: {
+        username: true,
+        name: true,
+      },
+    })) as User);
+
   return (
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
         <TRPCReactProvider>
           <AuthProvider session={session}>
+            <Navbar sessionUser={sessionUser} />
             <LoginModal />
             <div className="mx-auto w-full max-w-lg pt-24 xl:max-w-xl">
               {children}
