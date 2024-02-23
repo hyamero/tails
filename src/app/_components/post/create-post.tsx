@@ -60,7 +60,7 @@ const CreatePostTrigger = ({ user }: { user?: Session["user"] }) => {
   );
 
   return (
-    <div className="hidden items-center gap-4 py-5 md:flex">
+    <div className="mb-3 hidden items-center gap-4 rounded-md border border-b bg-background p-5 md:flex">
       <Avatar className="pointer-events-none">
         <AvatarImage
           className="rounded-full"
@@ -70,7 +70,7 @@ const CreatePostTrigger = ({ user }: { user?: Session["user"] }) => {
       </Avatar>
 
       <button
-        title="Start a quote..."
+        title="Start a post..."
         className="w-full cursor-text select-none text-left text-zinc-500"
         onClick={() => {
           if (user) {

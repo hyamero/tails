@@ -112,7 +112,7 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
         likesModalIsOpen={likesModalIsOpen}
         setLikesModalIsOpen={setLikesModalIsOpen}
       />
-      <div className="flex items-start justify-between border-b py-5  last:border-0">
+      <div className="flex items-start justify-between rounded-sm border bg-background p-5">
         <div className="flex w-full items-start gap-3">
           <Link href={`/user/${userSlug}`} className="font-semibold">
             <Avatar className="relative top-1">
@@ -182,11 +182,11 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
 
             {postType === "post" && (
               <>
-                <div className="relative right-[0.4rem] mt-[6px] text-[#e6e8ea]">
+                <div className="relative right-[0.4rem] mt-[6px] text-foreground">
                   <button
                     title="like"
                     type="button"
-                    className="rounded-full p-[0.4rem] transition-colors duration-200 hover:bg-zinc-900"
+                    className="rounded-full p-[0.4rem] transition-colors duration-200 hover:bg-zinc-100"
                     onClick={handleToggleLikeCount}
                   >
                     {likedByUser ? (
@@ -199,7 +199,7 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
                   <button
                     title="comment"
                     type="button"
-                    className="rounded-full p-[0.4rem] transition-colors duration-200 hover:bg-zinc-900"
+                    className="rounded-full p-[0.4rem] transition-colors duration-200 hover:bg-zinc-100"
                     onClick={handleReply}
                   >
                     <PiChatCircle className="text-2xl" />

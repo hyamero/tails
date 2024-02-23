@@ -65,27 +65,31 @@ export default function Page({ authorId, postId }: PostsProps) {
       <CreatePost onProfilePage={authorId ?? postId ? true : false} />
       <CreateComment />
       <DeletePostModal />
+      <div className="my-5 h-[0.5px] w-full rounded-xl bg-slate-400"></div>
 
-      {session && tempPosts.length !== 0
-        ? tempPosts
-            .filter((post) => !deletedPosts.includes(post.id))
-            .map((post) => {
-              return <PostItem key={post.id} post={post as Post} />;
-            })
-        : null}
+      <div className="space-y-2">
+        {session && tempPosts.length !== 0
+          ? tempPosts
+              .filter((post) => !deletedPosts.includes(post.id))
+              .map((post) => {
+                return <PostItem key={post.id} post={post as Post} />;
+              })
+          : null}
 
-      {posts?.pages.map((page, i) => (
-        <React.Fragment key={page.nextPageCursor?.id ?? i}>
-          {page.posts
-            .filter(
-              (post) =>
-                !deletedPosts.includes(post.id) && !existsInTempPosts(post.id),
-            )
-            .map((post) => (
-              <PostItem key={post.id} post={post} />
-            ))}
-        </React.Fragment>
-      ))}
+        {posts?.pages.map((page, i) => (
+          <React.Fragment key={page.nextPageCursor?.id ?? i}>
+            {page.posts
+              .filter(
+                (post) =>
+                  !deletedPosts.includes(post.id) &&
+                  !existsInTempPosts(post.id),
+              )
+              .map((post) => (
+                <PostItem key={post.id} post={post} />
+              ))}
+          </React.Fragment>
+        ))}
+      </div>
 
       {/* Ref for react-intersection-observer */}
       <div ref={ref} className="pt-2"></div>
