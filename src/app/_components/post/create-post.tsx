@@ -60,7 +60,7 @@ const CreatePostTrigger = ({ user }: { user?: Session["user"] }) => {
   );
 
   return (
-    <div className="mb-3 hidden items-center gap-4 rounded-md border border-b bg-background p-5 md:flex">
+    <div className="hidden items-center gap-4 rounded-md border border-b bg-background p-5 md:flex">
       <Avatar className="pointer-events-none">
         <AvatarImage
           className="rounded-full"
