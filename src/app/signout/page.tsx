@@ -2,6 +2,7 @@
 
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 import { Button } from "~/app/_components/ui/button";
 import {
@@ -16,9 +17,11 @@ export default function Page() {
   const { status } = useSession();
   const router = useRouter();
 
-  if (status === "unauthenticated") {
-    router.push("/");
-  }
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/");
+    }
+  }, [status]);
 
   return (
     <section className="container mt-20 max-w-lg">

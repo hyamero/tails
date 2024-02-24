@@ -12,7 +12,6 @@ import {
 
 import { BiUser } from "react-icons/bi";
 import { CgMenuRight } from "react-icons/cg";
-import { RiDoubleQuotesL } from "react-icons/ri";
 
 import {
   Sheet,
@@ -39,6 +38,12 @@ export function Navbar({ sessionUser }: { sessionUser: User | null }) {
     setSessionUser(sessionUser);
   }, [sessionUser, setSessionUser]);
 
+  useEffect(() => {
+    if (status === "authenticated" && !sessionUser?.username) {
+      router.push("/new-user");
+    }
+  }, [status, sessionUser?.username]);
+
   const router = useRouter();
 
   const togglePostFormIsOpen = useBoundStore(
@@ -52,10 +57,6 @@ export function Navbar({ sessionUser }: { sessionUser: User | null }) {
   const slugParam = sessionUser?.username
     ? "@" + sessionUser?.username
     : sessionUser?.id;
-
-  if (status === "authenticated" && !sessionUser?.username) {
-    router.push("/new-user");
-  }
 
   return (
     <nav>
