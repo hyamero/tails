@@ -70,6 +70,25 @@ export default function Page() {
     }
   };
 
+  const reservedSlugs = [
+    "app",
+    "admin",
+    "www",
+    "api",
+    "post",
+    "user",
+    "org",
+    "new-user",
+    "signin",
+    "signout",
+    "comment",
+    "like",
+    "unlike",
+    "edit",
+    "delete",
+    "settings",
+  ];
+
   const formSchema = z.object({
     name: z
       .string()
@@ -84,7 +103,12 @@ export default function Page() {
       .regex(
         /^[a-zA-Z0-9_]+$/,
         "The username must contain only letters, numbers, period, and underscore (_)",
-      ),
+      )
+      .refine((slug) => !reservedSlugs.includes(slug), {
+        message: "This username is reserved",
+      }),
+
+    userType: z.enum(["user", "org"]),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -128,7 +152,7 @@ export default function Page() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="mt-20 space-y-8 rounded-lg border p-12"
+        className="mt-20 space-y-8 rounded-lg border bg-white p-12"
       >
         <FormField
           control={form.control}
@@ -160,6 +184,7 @@ export default function Page() {
             </FormItem>
           )}
         />
+
         <Button title="submit" type="submit" className="w-full">
           {isLoading ? "Saving..." : "Save"}
         </Button>
