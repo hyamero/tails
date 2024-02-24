@@ -2,6 +2,7 @@ import { relations, sql } from "drizzle-orm";
 import {
   index,
   int,
+  mysqlEnum,
   mysqlTableCreator,
   primaryKey,
   text,
@@ -79,6 +80,7 @@ export const likesRelations = relations(likes, ({ one }) => ({
 
 export const users = createTable("user", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
+  userType: mysqlEnum("userType", ["user", "admin", "org"]).notNull(),
   username: varchar("username", { length: 30 }).unique(),
   name: varchar("name", { length: 255 }),
   email: varchar("email", { length: 255 }).notNull(),
