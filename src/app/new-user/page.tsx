@@ -23,6 +23,13 @@ import {
   FormDescription,
 } from "~/app/_components/ui/form";
 import { useSession } from "next-auth/react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../_components/ui/select";
 
 export default function Page() {
   const router = useRouter();
@@ -51,8 +58,9 @@ export default function Page() {
       toast.success("Profile Updated!");
       setSessionUser({
         ...session?.user,
-        username: username ?? null,
         name: name,
+        username: username ?? null,
+        userType: sessionUser?.userType,
       } as User);
       router.replace(`/user/${username ?? session?.user.id}`);
     }
@@ -139,6 +147,7 @@ export default function Page() {
       editUser({
         name: data.name,
         username: data.username,
+        userType: data.userType,
       });
 
       setName(data.name);
@@ -180,6 +189,38 @@ export default function Page() {
               <FormControl>
                 <Input placeholder="Username" {...field} />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="userType"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>User Type</FormLabel>
+              <div className="flex flex-col space-y-1.5">
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select" {...field} />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent position="popper">
+                    <SelectItem className="hover:cursor-pointer" value="user">
+                      Individual
+                    </SelectItem>
+
+                    <SelectItem className="hover:cursor-pointer" value="org">
+                      Organization
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <FormMessage />
             </FormItem>
           )}
