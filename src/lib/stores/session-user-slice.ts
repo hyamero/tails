@@ -2,8 +2,9 @@ import type { StateCreator } from "zustand";
 
 type SessionUser = {
   user: {
-    username: string | null;
     name: string | null;
+    username: string | null;
+    userType: "user" | "org" | "admin";
   } | null;
 };
 
@@ -17,8 +18,9 @@ export const createSessionUserSlice: StateCreator<
   SessionUserSlice & SessionUserSliceActions
 > = (set) => ({
   user: {
-    username: null,
     name: null,
+    username: null,
+    userType: "user",
   },
 
   setSessionUser: (newSession) =>

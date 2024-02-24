@@ -17,6 +17,7 @@ export type TempPostItem = Omit<
 
 export type User = {
   id: string;
+  userType: "user" | "org" | "admin";
   username: string | null;
   name: string | null;
   email: string;
