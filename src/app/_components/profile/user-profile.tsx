@@ -10,7 +10,7 @@ import {
 } from "~/app/_components/ui/avatar";
 
 import { type User } from "~/lib/types";
-import Posts from "../../page";
+import { Feed } from "~/app/_components/post/feed";
 import { EditUserModal } from "./edit-profile-modal";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
@@ -120,7 +120,7 @@ export default function UserProfile({ user }: { user?: User }) {
           <TabsContent value="posts">
             {/* User Feed with authorId param
        to list user's posts */}
-            <Posts authorId={user.id} />
+            <Feed authorId={user.id} />
           </TabsContent>
 
           <TabsContent value="replies">
