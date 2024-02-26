@@ -30,21 +30,17 @@ import { type User } from "~/lib/types";
 import { useEffect } from "react";
 
 export function Navbar({ sessionUser }: { sessionUser: User | null }) {
+  const router = useRouter();
   const { data: session, status } = useSession();
-
   const setSessionUser = useBoundStore((state) => state.setSessionUser);
 
   useEffect(() => {
     setSessionUser(sessionUser);
   }, [sessionUser, setSessionUser]);
 
-  useEffect(() => {
-    if (status === "authenticated" && !sessionUser?.username) {
-      router.push("/new-user");
-    }
-  }, [status, sessionUser?.username]);
-
-  const router = useRouter();
+  if (status === "authenticated" && !sessionUser?.username) {
+    router.push("/new-user");
+  }
 
   const togglePostFormIsOpen = useBoundStore(
     (state) => state.modalActions.togglePostFormIsOpen,

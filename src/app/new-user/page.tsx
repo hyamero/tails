@@ -4,7 +4,7 @@ import * as z from "zod";
 import { toast } from "sonner";
 import { api } from "~/trpc/react";
 import { useForm } from "react-hook-form";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useBoundStore } from "~/lib/use-bound-store";
@@ -41,20 +41,8 @@ export default function Page() {
   const [name, setName] = useState(session?.user.name ?? "");
   const [username, setUsername] = useState(sessionUser?.username ?? "");
 
-  const {
-    mutate: editUser,
-    isSuccess,
-    isLoading,
-    isError,
-  } = api.user.editUser.useMutation();
-
-  useEffect(() => {
-    if (isLoading) {
-      toast.loading("Updating profile...");
-      router.prefetch(`/user/${username ?? session?.user.id}`);
-    }
-
-    if (isSuccess) {
+  const { mutate: editUser, isLoading } = api.user.editUser.useMutation({
+    onSuccess: () => {
       toast.success("Profile Updated!");
       setSessionUser({
         ...session?.user,
@@ -63,12 +51,12 @@ export default function Page() {
         userType: sessionUser?.userType,
       } as User);
       router.replace(`/user/${username ?? session?.user.id}`);
-    }
+    },
 
-    if (isError) {
+    onError: () => {
       toast.error("Something went wrong. Try again later.");
-    }
-  }, [isLoading, isSuccess, isError]);
+    },
+  });
 
   const charWarning = (value: "max" | "min") => {
     if (value === "max") {
