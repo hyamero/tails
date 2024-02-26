@@ -64,7 +64,7 @@ export default function UserProfile({ user }: { user?: User }) {
           <div className="flex items-center justify-between py-5">
             <div>
               <p className="text-3xl font-bold">{user.name}</p>
-              <span className="text-zinc-400">{username()}</span>
+              <span className="text-muted-foreground">{username()}</span>
             </div>
             <Avatar className="h-24 w-24">
               <AvatarImage

@@ -121,7 +121,7 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
                 src={post.author.image as string | undefined}
                 alt={`${post.author.name}'s avatar`}
               />
-              <AvatarFallback className="text-xs">
+              <AvatarFallback className="text-xs text-muted-foreground">
                 {post.author.name?.split(" ").at(0)}
               </AvatarFallback>
             </Avatar>
@@ -132,7 +132,7 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
               <ProfileHoverCard author={post.author} userId={session?.user.id}>
                 <Link
                   href={`/user/${userSlug}`}
-                  className="font-semibold hover:underline"
+                  className="font-semibold text-foreground hover:underline"
                 >
                   {post.author.name}
                 </Link>
@@ -142,7 +142,7 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
-                      <span className="select-none text-zinc-500">
+                      <span className="select-none text-muted-foreground">
                         {formatDistanceToNowStrict(post.createdAt, {
                           addSuffix: false,
                           locale: {
@@ -172,7 +172,7 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
             {!pathname.includes("/post") && postType === "post" ? (
               <Link
                 href={`/user/${userSlug}/post/${post.id}`}
-                className="whitespace-pre-wrap"
+                className="whitespace-pre-wrap text-foreground"
               >
                 {post.content}
               </Link>
@@ -209,7 +209,7 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
                 <div className="space-x-3">
                   {!pathname.includes(post.id) && post.replies ? (
                     <Link
-                      className="text-zinc-500"
+                      className="text-muted-foreground"
                       href={`/user/${
                         post.author.username ?? post.authorId
                       }/post/${post.id}`}
