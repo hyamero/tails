@@ -2,13 +2,16 @@ import "~/styles/globals.css";
 
 import { Inter } from "next/font/google";
 
+import { api } from "~/trpc/server";
 import { TRPCReactProvider } from "~/trpc/react";
 import { getServerAuthSession } from "~/server/auth";
 import AuthProvider from "./context/client-auth-provider";
+
 import { LoginModal } from "./_components/modal/modals";
-import { api } from "~/trpc/server";
-import { type User } from "~/lib/types";
+import { Toaster } from "./_components/ui/sonner";
 import { Navbar } from "./_components/navbar";
+import NextTopLoader from "nextjs-toploader";
+import { type User } from "~/lib/types";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -42,6 +45,8 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
+        <NextTopLoader />
+        <Toaster />
         <TRPCReactProvider>
           <AuthProvider session={session}>
             <Navbar sessionUser={sessionUser} />
