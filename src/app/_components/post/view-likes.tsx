@@ -10,7 +10,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent } from "../ui/dialog";
 import { ProfileHoverCard } from "../profile/profile-hovercard";
-import { LoadingSkeleton } from "~/app/feed-loading";
+import { LoadingSkeleton } from "~/app/_components/post/feed-loading";
 
 type ViewLikesProps = {
   postId: string;

@@ -8,7 +8,7 @@ import { PostItem } from "./post-item";
 import { CreatePost } from "./create-post";
 import { DeletePostModal } from "../modal/modals";
 import { useInView } from "react-intersection-observer";
-import Loading, { LoadingSkeleton } from "~/app/feed-loading";
+import Loading, { LoadingSkeleton } from "~/app/_components/post/feed-loading";
 import { useBoundStore } from "~/lib/use-bound-store";
 import { CreateComment } from "../comment/create-comment";
 import { useSession } from "next-auth/react";
