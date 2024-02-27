@@ -79,7 +79,7 @@ export const PostForm = ({ user, formType, post }: PostFormProps) => {
       toast.success("Post created!");
       setInputValue("");
     },
-    onMutate: () => toast.loading("Creating post..."),
+
     onError: () => {
       toast.error("Something went wrong. Try again later.");
     },
