@@ -38,6 +38,8 @@ export default async function RootLayout({
       columns: {
         username: true,
         name: true,
+        createdAt: true,
+        userType: true,
       },
     })) as User);
 
@@ -50,9 +52,7 @@ export default async function RootLayout({
           <AuthProvider session={session}>
             <Navbar sessionUser={sessionUser} />
             <LoginModal />
-            <div className="mx-auto w-full max-w-lg pt-24 xl:max-w-xl">
-              {children}
-            </div>
+            <div className="pt-24">{children}</div>
           </AuthProvider>
         </TRPCReactProvider>
       </body>

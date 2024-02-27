@@ -20,6 +20,8 @@ export const userRouter = createTRPCRouter({
           name: z.boolean().optional(),
           email: z.boolean().optional(),
           image: z.boolean().optional(),
+          createdAt: z.boolean().optional(),
+          userType: z.boolean().optional(),
         }),
       }),
     )
@@ -32,6 +34,8 @@ export const userRouter = createTRPCRouter({
           name: input.columns?.name,
           email: input.columns?.email,
           image: input.columns?.image,
+          createdAt: input.columns?.createdAt,
+          userType: input.columns?.userType,
         },
       });
     }),

@@ -5,6 +5,7 @@ type SessionUser = {
     name: string | null;
     username: string | null;
     userType: "user" | "org" | "admin";
+    createdAt: Date;
   } | null;
 };
 
@@ -21,6 +22,7 @@ export const createSessionUserSlice: StateCreator<
     name: null,
     username: null,
     userType: "user",
+    createdAt: new Date(),
   },
 
   setSessionUser: (newSession) =>
