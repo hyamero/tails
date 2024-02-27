@@ -59,7 +59,7 @@ export default function UserProfile({ user }: { user?: User }) {
 
   return (
     mounted && (
-      <main>
+      <main className="container mx-auto max-w-xl">
         <section>
           <div className="flex items-center justify-between py-5">
             <div>
