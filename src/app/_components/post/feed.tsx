@@ -61,11 +61,10 @@ export function Feed({ authorId, postId }: PostsProps) {
   };
 
   return (
-    <div className="pb-24 md:pb-0">
+    <div className="mt-7 pb-24 md:pb-0">
       <CreatePost onProfilePage={authorId ?? postId ? true : false} />
       <CreateComment />
       <DeletePostModal />
-      <div className="my-5 h-[0.5px] w-full rounded-xl bg-slate-400"></div>
 
       <div className="space-y-2">
         {session && tempPosts.length !== 0

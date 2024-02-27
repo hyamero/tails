@@ -60,36 +60,39 @@ const CreatePostTrigger = ({ user }: { user?: Session["user"] }) => {
   );
 
   return (
-    <div className="hidden items-center gap-4 rounded-md border border-b bg-background p-5 md:flex">
-      <Avatar className="pointer-events-none">
-        <AvatarImage
-          className="rounded-full"
-          src={user?.image as string | undefined}
-        />
-        <AvatarFallback>{user?.name?.split(" ").at(0)}</AvatarFallback>
-      </Avatar>
+    <>
+      <div className="hidden w-full items-center gap-4 rounded-md border border-b bg-background p-5 md:flex">
+        <Avatar className="pointer-events-none">
+          <AvatarImage
+            className="rounded-full"
+            src={user?.image as string | undefined}
+          />
+          <AvatarFallback>{user?.name?.split(" ").at(0)}</AvatarFallback>
+        </Avatar>
 
-      <button
-        title="Start a post..."
-        className="w-full cursor-text select-none text-left text-zinc-500"
-        onClick={() => {
-          if (user) {
-            togglePostFormIsOpen();
-          } else {
-            toggleLoginModalIsOpen();
-          }
-        }}
-      >
-        Start a quote...
-      </button>
+        <button
+          title="Start a post..."
+          className="w-full cursor-text select-none text-left text-zinc-500"
+          onClick={() => {
+            if (user) {
+              togglePostFormIsOpen();
+            } else {
+              toggleLoginModalIsOpen();
+            }
+          }}
+        >
+          Start a quote...
+        </button>
 
-      <Button
-        disabled
-        title="Post"
-        className="rounded-full font-semibold disabled:cursor-not-allowed disabled:text-zinc-500"
-      >
-        Post
-      </Button>
-    </div>
+        <Button
+          disabled
+          title="Post"
+          className="rounded-full font-semibold disabled:cursor-not-allowed disabled:text-zinc-500"
+        >
+          Post
+        </Button>
+      </div>
+      <div className="my-5 hidden h-[0.5px]  w-full rounded-xl bg-slate-400 md:block"></div>
+    </>
   );
 };
