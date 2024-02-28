@@ -146,7 +146,14 @@ const TabsContents = ({
       value: "posts",
     },
     {
-      component: () => <BudgetStats />,
+      component: () => (
+        <div className="flex flex-col gap-5">
+          <BudgetStats />
+          <Button>
+            <Link href="/dashboard">Visit Dashboard</Link>
+          </Button>
+        </div>
+      ),
       value: "statistics",
     },
     {
