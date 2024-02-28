@@ -3,9 +3,17 @@
 import * as React from "react";
 import { Button } from "../_components/ui/button";
 import { Icons } from "../_components/icons";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export function UserAuthForm() {
+  const { status } = useSession();
+  const router = useRouter();
+
+  if (status === "authenticated") {
+    router.push("/");
+  }
+
   return (
     <div className="grid gap-6">
       <div className="relative">
