@@ -10,6 +10,13 @@ import { useBoundStore } from "~/lib/use-bound-store";
 import { Card } from "../ui/card";
 import { BudgetStats } from "../payment/budget-stats";
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../ui/accordion";
+
 export function LeftSideBar() {
   const { data: session } = useSession();
   const sessionUser = useBoundStore((state) => state.user);
@@ -52,7 +59,22 @@ export function LeftSideBar() {
         </Link>
       </Card>
 
-      <BudgetStats />
+      <Accordion
+        type="single"
+        defaultValue="stats"
+        collapsible
+        className="w-full"
+      >
+        <AccordionItem value="stats">
+          <AccordionTrigger className="px-4 font-semibold text-foreground">
+            {" "}
+            Statistics
+          </AccordionTrigger>
+          <AccordionContent>
+            <BudgetStats />
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </aside>
   );
 }
