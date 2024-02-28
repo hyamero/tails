@@ -10,7 +10,7 @@ import { useBoundStore } from "~/lib/use-bound-store";
 import { Card } from "../ui/card";
 import { BudgetStats } from "../payment/budget-stats";
 
-export function SideBar() {
+export function LeftSideBar() {
   const { data: session } = useSession();
   const sessionUser = useBoundStore((state) => state.user);
 
