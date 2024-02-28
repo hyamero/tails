@@ -40,6 +40,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
       username: true,
       name: true,
       image: true,
+      userType: true,
     },
   })) as User;
 

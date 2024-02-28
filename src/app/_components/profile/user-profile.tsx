@@ -22,6 +22,7 @@ import {
   TabsTrigger,
 } from "~/app/_components/ui/tabs";
 import { useSession } from "next-auth/react";
+import { BudgetStats } from "../payment/budget-stats";
 
 export default function UserProfile({ user }: { user?: User }) {
   const [mounted, setMounted] = useState(false);
@@ -103,42 +104,93 @@ export default function UserProfile({ user }: { user?: User }) {
             </div>
           )}
         </section>
-
-        <Tabs defaultValue="posts" className="mt-5 w-full">
-          <TabsList className="w-full border-b bg-transparent">
-            <TabsTrigger value="posts" className="w-full">
-              Posts
-            </TabsTrigger>
-            <TabsTrigger value="replies" className="w-full">
-              Replies
-            </TabsTrigger>
-            <TabsTrigger value="likes" className="w-full">
-              Likes
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="posts" className="pt-5">
-            {/* User Feed with authorId param
-       to list user's posts */}
-            <Feed authorId={user.id} />
-          </TabsContent>
-
-          <TabsContent value="replies">
-            <div className="flex justify-center pt-10 text-xl font-semibold">
-              Replies tab coming soon..
-            </div>
-          </TabsContent>
-
-          <TabsContent value="likes">
-            <div className="flex justify-center pt-10 text-xl font-semibold">
-              Likes tab coming soon..
-            </div>
-          </TabsContent>
-        </Tabs>
+        <TabsContents userId={user.id} userType={user.userType} />
       </main>
     )
   );
 }
+
+const TabsContents = ({
+  userId,
+  userType,
+}: {
+  userId: string;
+  userType: User["userType"];
+}) => {
+  const userContents = [
+    {
+      component: () => <Feed authorId={userId} />,
+      value: "posts",
+    },
+    {
+      component: () => (
+        <div className="flex justify-center pt-10 text-xl font-semibold">
+          Coming soon!
+        </div>
+      ),
+      value: "activity",
+    },
+    {
+      component: () => (
+        <div className="flex justify-center pt-10 text-xl font-semibold">
+          Coming soon!
+        </div>
+      ),
+      value: "orgs",
+    },
+  ];
+
+  const orgContents = [
+    {
+      component: () => <Feed authorId={userId} />,
+      value: "posts",
+    },
+    {
+      component: () => <BudgetStats />,
+      value: "statistics",
+    },
+    {
+      component: () => (
+        <div className="flex justify-center pt-10 text-xl font-semibold">
+          Coming soon!
+        </div>
+      ),
+      value: "fosters",
+    },
+  ];
+
+  const contents = userType === "user" ? userContents : orgContents;
+
+  return (
+    <Tabs defaultValue="posts" className="mt-5 w-full">
+      <TabsList className="w-full border-b">
+        {contents.map((tab) => (
+          <TabsTrigger
+            key={tab.value}
+            value={tab.value}
+            className="w-full capitalize"
+          >
+            {tab.value}
+          </TabsTrigger>
+        ))}
+      </TabsList>
+
+      {contents.map((content) => {
+        const Component = content.component;
+
+        return (
+          <TabsContent
+            key={content.value}
+            value={content.value}
+            className="pt-5"
+          >
+            <Component />
+          </TabsContent>
+        );
+      })}
+    </Tabs>
+  );
+};
 
 const NoUser = () => {
   return (
