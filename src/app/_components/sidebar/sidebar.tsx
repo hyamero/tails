@@ -10,14 +10,14 @@ import { useBoundStore } from "~/lib/use-bound-store";
 import { Card } from "../ui/card";
 import { BudgetStats } from "../payment/budget-stats";
 
-export function SideBar({}) {
+export function SideBar() {
   const { data: session } = useSession();
   const sessionUser = useBoundStore((state) => state.user);
 
   if (!session || !sessionUser) return null;
 
   return (
-    <aside className="space-y-2">
+    <aside className="mx-auto w-full max-w-xl space-y-2">
       <Card className="flex items-center justify-between space-x-4 p-5">
         <div className="space-y-3">
           <div>

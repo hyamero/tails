@@ -62,7 +62,7 @@ export function Feed({ authorId, postId, className }: PostsProps) {
   };
 
   return (
-    <div className={`${className} mx-auto max-w-xl pb-24 md:pb-0`}>
+    <div className={`${className} mx-auto w-full max-w-xl pb-24 md:pb-0`}>
       <CreatePost onProfilePage={authorId ?? postId ? true : false} />
       <CreateComment />
       <DeletePostModal />

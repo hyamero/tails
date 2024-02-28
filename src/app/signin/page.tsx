@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 
 export default function AuthenticationPage() {
   return (
-    <Card className="mt-28 lg:p-8">
-      <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+    <div className="container mt-28">
+      <Card className="mx-auto flex w-full max-w-lg flex-col justify-center space-y-6 p-8">
         <div className="flex flex-col space-y-2 text-center">
           <h1 className="text-2xl font-semibold tracking-tight">
             Create an account
@@ -38,7 +38,7 @@ export default function AuthenticationPage() {
           </Link>
           .
         </p>
-      </div>
-    </Card>
+      </Card>
+    </div>
   );
 }

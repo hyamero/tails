@@ -103,7 +103,7 @@ export function PostDropdownMenu({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger title="post menu" className="outline-none">
-        <PiDotsThree className="text-2xl" />
+        <PiDotsThree className="text-2xl text-muted-foreground" />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="font-semibold [&>*]:cursor-pointer [&>*]:border-b [&>*]:last:border-0">
         {dropdownMenu.map((item, i) => (

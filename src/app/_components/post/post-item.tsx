@@ -112,7 +112,7 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
         likesModalIsOpen={likesModalIsOpen}
         setLikesModalIsOpen={setLikesModalIsOpen}
       />
-      <div className="mx-auto flex max-w-xl items-start justify-between rounded-sm border bg-background p-5">
+      <div className="mx-auto flex w-full max-w-xl items-start justify-between rounded-sm border bg-background p-5">
         <div className="flex w-full items-start gap-3">
           <Link href={`/user/${userSlug}`} className="font-semibold">
             <Avatar className="relative top-1">
