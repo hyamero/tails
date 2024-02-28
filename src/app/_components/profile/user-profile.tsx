@@ -117,7 +117,7 @@ export default function UserProfile({ user }: { user?: User }) {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="posts">
+          <TabsContent value="posts" className="pt-5">
             {/* User Feed with authorId param
        to list user's posts */}
             <Feed authorId={user.id} />

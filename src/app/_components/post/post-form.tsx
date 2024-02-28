@@ -149,7 +149,7 @@ export const PostForm = ({ user, formType, post }: PostFormProps) => {
             // maxLength={500}
             placeholder={
               formType === "post"
-                ? "Start a quote..."
+                ? "Start a post..."
                 : `Reply to ${post?.author}...`
             }
             onChange={(e) => {

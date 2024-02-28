@@ -81,7 +81,7 @@ const CreatePostTrigger = ({ user }: { user?: Session["user"] }) => {
             }
           }}
         >
-          Start a quote...
+          Start a post...
         </button>
 
         <Button
