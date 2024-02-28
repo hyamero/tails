@@ -1,4 +1,4 @@
-import { useTheme } from "next-themes";
+// import { useTheme } from "next-themes";
 import { Bar, BarChart, Line, LineChart, ResponsiveContainer } from "recharts";
 
 import {
@@ -44,7 +44,7 @@ const data = [
 ];
 
 export function BudgetStats() {
-  const { theme: mode } = useTheme();
+  // const { theme: mode } = useTheme();
 
   return (
     <div className="space-y-2">
