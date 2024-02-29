@@ -41,6 +41,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
       name: true,
       image: true,
       userType: true,
+      createdAt: true,
     },
   })) as User;
 

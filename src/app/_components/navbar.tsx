@@ -27,20 +27,23 @@ import { useRouter } from "next/navigation";
 import { useBoundStore } from "~/lib/use-bound-store";
 import { useSession } from "next-auth/react";
 import { type User } from "~/lib/types";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 export function Navbar({ sessionUser }: { sessionUser: User | null }) {
   const router = useRouter();
   const { data: session, status } = useSession();
   const setSessionUser = useBoundStore((state) => state.setSessionUser);
 
+  const pushNewUser = useCallback(() => {
+    if (status === "authenticated" && !sessionUser?.username) {
+      router.push("/new-user");
+    }
+  }, [router, sessionUser?.username, status]);
+
   useEffect(() => {
     setSessionUser(sessionUser);
-  }, [sessionUser, setSessionUser]);
-
-  if (status === "authenticated" && !sessionUser?.username) {
-    router.push("/new-user");
-  }
+    pushNewUser();
+  }, [sessionUser, setSessionUser, pushNewUser]);
 
   const togglePostFormIsOpen = useBoundStore(
     (state) => state.modalActions.togglePostFormIsOpen,
@@ -98,7 +101,7 @@ export function Navbar({ sessionUser }: { sessionUser: User | null }) {
         </button>
 
         <Link
-          href={`/user/${slugParam}`}
+          href={`/user/${sessionUser?.username ?? sessionUser?.id}`}
           title="profile"
           onClick={() => {
             if (!session) toggleLoginModalIsOpen();

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 
 import {
@@ -23,6 +23,7 @@ import {
 } from "~/app/_components/ui/tabs";
 import { useSession } from "next-auth/react";
 import { BudgetStats } from "../payment/budget-stats";
+import { useRouter } from "next/navigation";
 
 export default function UserProfile({ user }: { user?: User }) {
   const [mounted, setMounted] = useState(false);
@@ -31,8 +32,15 @@ export default function UserProfile({ user }: { user?: User }) {
     setMounted(true);
   }, []);
 
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const isCurrentUser = session?.user?.id === user?.id;
+
+  const pushNewUser = useCallback(() => {
+    if (status === "authenticated" && !user?.username) {
+      router.push("/new-user");
+    }
+  }, [router, user?.username, status]);
 
   useEffect(() => {
     if (user?.username) {
@@ -43,8 +51,10 @@ export default function UserProfile({ user }: { user?: User }) {
         "",
         newUrl,
       );
+    } else {
+      pushNewUser();
     }
-  }, [user?.username]);
+  }, [user?.username, pushNewUser]);
 
   if (!user) {
     return <NoUser />;

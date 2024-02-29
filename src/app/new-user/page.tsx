@@ -50,7 +50,7 @@ export default function Page() {
         username: username ?? null,
         userType: sessionUser?.userType,
       } as User);
-      router.replace(`/user/${username ?? session?.user.id}`);
+      router.push("/");
     },
 
     onError: () => {
@@ -149,7 +149,7 @@ export default function Page() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="mt-20 space-y-8 rounded-lg border bg-white p-12"
+        className="container mx-auto mt-20 w-full max-w-lg space-y-8 rounded-lg border bg-white p-12"
       >
         <FormField
           control={form.control}
