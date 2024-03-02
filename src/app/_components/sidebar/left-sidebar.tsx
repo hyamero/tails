@@ -26,22 +26,24 @@ export function LeftSideBar() {
         <ProfileCard author={{ ...session.user, ...sessionUser } as User} />
       </Card>
 
-      <Accordion
-        type="single"
-        defaultValue="stats"
-        collapsible
-        className="w-full"
-      >
-        <AccordionItem value="stats">
-          <AccordionTrigger className="px-4 font-semibold text-foreground">
-            {" "}
-            Statistics
-          </AccordionTrigger>
-          <AccordionContent>
-            <BudgetStats />
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+      {sessionUser.userType === "org" && (
+        <Accordion
+          type="single"
+          defaultValue="stats"
+          collapsible
+          className="w-full"
+        >
+          <AccordionItem value="stats">
+            <AccordionTrigger className="px-4 font-semibold text-foreground">
+              {" "}
+              Statistics
+            </AccordionTrigger>
+            <AccordionContent>
+              <BudgetStats />
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      )}
     </aside>
   );
 }
