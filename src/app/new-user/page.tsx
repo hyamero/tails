@@ -51,6 +51,7 @@ export default function Page() {
         userType: sessionUser?.userType,
       } as User);
       router.push("/");
+      router.refresh();
     },
 
     onError: () => {
@@ -123,7 +124,7 @@ export default function Page() {
   );
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
-    if (!usernameAvailable.data) {
+    if (!usernameAvailable.data && data.username !== sessionUser?.username) {
       toast.error("Username already taken.");
       return;
     }

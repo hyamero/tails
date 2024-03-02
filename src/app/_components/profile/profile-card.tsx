@@ -15,7 +15,7 @@ export function ProfileCard({ author }: ProfileHoverCardProps) {
   const userSlug = author.username ? "@" + author.username : author.id;
 
   const joined = author.createdAt
-    ? "Joined" + format(new Date(author.createdAt), "MMMM yyyy")
+    ? "Joined " + format(new Date(author.createdAt), "MMMM yyyy")
     : "";
 
   return (
