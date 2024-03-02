@@ -2,6 +2,7 @@
 
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import { Button } from "~/app/_components/ui/button";
 import {
@@ -17,7 +18,8 @@ export default function Page() {
   const router = useRouter();
 
   if (status === "unauthenticated") {
-    router.push("/signin");
+    router.push("/");
+    toast.info("Signed out successfully!");
   }
 
   return (
