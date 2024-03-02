@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 import {
@@ -36,12 +36,6 @@ export default function UserProfile({ user }: { user?: User }) {
   const router = useRouter();
   const isCurrentUser = session?.user?.id === user?.id;
 
-  const pushNewUser = useCallback(() => {
-    if (status === "authenticated" && !user?.username) {
-      router.push("/new-user");
-    }
-  }, [router, user?.username, status]);
-
   useEffect(() => {
     if (user?.username) {
       const newUrl = `@${user.username}`;
@@ -51,10 +45,12 @@ export default function UserProfile({ user }: { user?: User }) {
         "",
         newUrl,
       );
-    } else {
-      pushNewUser();
     }
-  }, [user?.username, pushNewUser]);
+  }, [user?.username]);
+
+  if (status === "authenticated" && !user?.username) {
+    router.push("/new-user");
+  }
 
   if (!user) {
     return <NoUser />;

@@ -27,23 +27,20 @@ import { useRouter } from "next/navigation";
 import { useBoundStore } from "~/lib/use-bound-store";
 import { useSession } from "next-auth/react";
 import { type User } from "~/lib/types";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 
 export function Navbar({ sessionUser }: { sessionUser: User | null }) {
   const router = useRouter();
   const { data: session, status } = useSession();
   const setSessionUser = useBoundStore((state) => state.setSessionUser);
 
-  const pushNewUser = useCallback(() => {
-    if (status === "authenticated" && !sessionUser?.username) {
-      router.push("/new-user");
-    }
-  }, [router, sessionUser?.username, status]);
-
   useEffect(() => {
     setSessionUser(sessionUser);
-    pushNewUser();
-  }, [sessionUser, setSessionUser, pushNewUser]);
+  }, [sessionUser, setSessionUser]);
+
+  if (status === "authenticated" && !sessionUser?.username) {
+    router.push("/new-user");
+  }
 
   const togglePostFormIsOpen = useBoundStore(
     (state) => state.modalActions.togglePostFormIsOpen,
@@ -101,7 +98,7 @@ export function Navbar({ sessionUser }: { sessionUser: User | null }) {
         </button>
 
         <Link
-          href={`/user/${sessionUser?.username ?? sessionUser?.id}`}
+          href={`/user/${slugParam}`}
           title="profile"
           onClick={() => {
             if (!session) toggleLoginModalIsOpen();
@@ -125,9 +122,13 @@ const BurgerMenu = ({ user }: { user: Session["user"] | null | undefined }) => {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          {user && <SheetTitle>Logged in as {user.name}</SheetTitle>}
+          <SheetTitle className="mr-2">
+            {user
+              ? "Logged in as" + user.name
+              : " The Animal Institution for Lifesaving and Sanctuary (TAILS)"}
+          </SheetTitle>
           <SheetDescription>
-            Social Media application, built with modern technologies.
+            Your Hub for Non-Profit Animal Organizations
           </SheetDescription>
         </SheetHeader>
         <Link
