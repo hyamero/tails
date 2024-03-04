@@ -13,6 +13,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "~/app/_components/ui/drawer";
+import Link from "next/link";
 
 const data = [
   {
@@ -124,7 +125,9 @@ export function DonationDrawer() {
             </div>
           </div>
           <DrawerFooter>
-            <Button>Donate</Button>
+            <Link href="donate/test">
+              <Button className="w-full">Donate</Button>
+            </Link>
             <DrawerClose asChild>
               <Button variant="outline">Cancel</Button>
             </DrawerClose>
