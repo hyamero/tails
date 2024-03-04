@@ -13,6 +13,7 @@ import {
 } from "../ui/accordion";
 import { ProfileCard } from "../profile/profile-card";
 import { Card } from "../ui/card";
+import { DonationDrawer } from "../payment/donation-drawer";
 
 export function LeftSideBar() {
   const { data: session } = useSession();
@@ -44,6 +45,7 @@ export function LeftSideBar() {
           </AccordionItem>
         </Accordion>
       )}
+      <DonationDrawer />
     </aside>
   );
 }
