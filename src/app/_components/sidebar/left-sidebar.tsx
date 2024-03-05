@@ -4,6 +4,7 @@ import { type User } from "~/lib/types";
 import { useSession } from "next-auth/react";
 import { useBoundStore } from "~/lib/utils/use-bound-store";
 import { BudgetStats } from "../payment/budget-stats";
+import { UploadDropzone } from "~/lib/utils/uploadthing";
 
 import {
   Accordion,
@@ -46,6 +47,19 @@ export function LeftSideBar() {
         </Accordion>
       )}
       <DonationDrawer />
+
+      <UploadDropzone
+        endpoint="imageUploader"
+        onClientUploadComplete={(res) => {
+          // Do something with the response
+          console.log("Files: ", res);
+          alert("Upload Completed");
+        }}
+        onUploadError={(error: Error) => {
+          // Do something with the error.
+          alert(`ERROR! ${error.message}`);
+        }}
+      />
     </aside>
   );
 }
