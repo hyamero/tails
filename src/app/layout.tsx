@@ -1,6 +1,7 @@
 import "~/styles/globals.css";
 
 import { Inter } from "next/font/google";
+import "@uploadthing/react/styles.css";
 
 import { api } from "~/trpc/server";
 import { TRPCReactProvider } from "~/trpc/react";
