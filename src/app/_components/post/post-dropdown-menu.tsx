@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/app/_components/ui/dropdown-menu";
-import { useBoundStore } from "~/lib/use-bound-store";
+import { useBoundStore } from "~/lib/utils/use-bound-store";
 import React from "react";
 import { useSession } from "next-auth/react";
 

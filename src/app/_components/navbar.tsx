@@ -24,7 +24,7 @@ import {
 
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
-import { useBoundStore } from "~/lib/use-bound-store";
+import { useBoundStore } from "~/lib/utils/use-bound-store";
 import { useSession } from "next-auth/react";
 import { type User } from "~/lib/types";
 import { useEffect } from "react";

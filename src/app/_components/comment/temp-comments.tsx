@@ -3,7 +3,7 @@
 import { useSession } from "next-auth/react";
 import { PostItem } from "~/app/_components/post/post-item";
 import { type Post } from "~/lib/types";
-import { useBoundStore } from "~/lib/use-bound-store";
+import { useBoundStore } from "~/lib/utils/use-bound-store";
 
 export default function TempComments() {
   const { data: session } = useSession();

@@ -19,7 +19,7 @@ import {
   AvatarImage,
   AvatarFallback,
 } from "~/app/_components/ui/avatar";
-import { useBoundStore } from "~/lib/use-bound-store";
+import { useBoundStore } from "~/lib/utils/use-bound-store";
 
 type PostFormProps = {
   user: Session["user"];

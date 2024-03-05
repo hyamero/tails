@@ -9,7 +9,7 @@ import { CreatePost } from "./create-post";
 import { DeletePostModal } from "../modal/modals";
 import { useInView } from "react-intersection-observer";
 import Loading, { LoadingSkeleton } from "~/app/_components/post/feed-loading";
-import { useBoundStore } from "~/lib/use-bound-store";
+import { useBoundStore } from "~/lib/utils/use-bound-store";
 import { CreateComment } from "../comment/create-comment";
 import { useSession } from "next-auth/react";
 import { type Post } from "~/lib/types";

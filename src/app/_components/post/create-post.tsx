@@ -2,8 +2,8 @@
 
 import { PostForm } from "./post-form";
 import type { Session } from "next-auth";
-import useMediaQuery from "~/hooks/use-media-query";
-import { useBoundStore } from "~/lib/use-bound-store";
+import useMediaQuery from "~/lib/hooks/use-media-query";
+import { useBoundStore } from "~/lib/utils/use-bound-store";
 
 import { Button } from "../ui/button";
 import { Drawer, DrawerContent } from "../ui/drawer";

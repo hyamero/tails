@@ -1,8 +1,8 @@
 "use client";
 
 import { PostForm } from "../post/post-form";
-import useMediaQuery from "~/hooks/use-media-query";
-import { useBoundStore } from "~/lib/use-bound-store";
+import useMediaQuery from "~/lib/hooks/use-media-query";
+import { useBoundStore } from "~/lib/utils/use-bound-store";
 
 import { Drawer, DrawerContent } from "../ui/drawer";
 import { Dialog, DialogContent } from "~/app/_components/ui/dialog";

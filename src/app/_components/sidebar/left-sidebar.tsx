@@ -2,7 +2,7 @@
 
 import { type User } from "~/lib/types";
 import { useSession } from "next-auth/react";
-import { useBoundStore } from "~/lib/use-bound-store";
+import { useBoundStore } from "~/lib/utils/use-bound-store";
 import { BudgetStats } from "../payment/budget-stats";
 
 import {

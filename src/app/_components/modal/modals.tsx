@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { Modal } from "./modal";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
-import { useBoundStore } from "~/lib/use-bound-store";
+import { useBoundStore } from "~/lib/utils/use-bound-store";
 
 export function LoginModal() {
   const loginModalIsOpen = useBoundStore((state) => state.loginModalIsOpen);

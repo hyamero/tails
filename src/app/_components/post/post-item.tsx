@@ -8,7 +8,7 @@ import { useRouter, usePathname } from "next/navigation";
 
 import type { Post } from "~/lib/types";
 import { PiChatCircle, PiHeart, PiHeartFill } from "react-icons/pi";
-import { formatDistance } from "~/hooks/format-distance";
+import { formatDistance } from "~/lib/hooks/format-distance";
 import { formatDistanceToNowStrict, formatRelative } from "date-fns";
 
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
@@ -21,7 +21,7 @@ import {
   TooltipProvider,
 } from "../ui/tooltip";
 
-import { useBoundStore } from "~/lib/use-bound-store";
+import { useBoundStore } from "~/lib/utils/use-bound-store";
 import { ProfileHoverCard } from "../profile/profile-hovercard";
 import { ViewLikes } from "./view-likes";
 import { useSession } from "next-auth/react";
