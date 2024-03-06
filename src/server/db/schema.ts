@@ -86,23 +86,76 @@ export const donations = createTable(
   "donation",
   {
     id: varchar("id", { length: 255 }).notNull().primaryKey(),
-    donor: varchar("donor", { length: 255 }).notNull(),
-    recipient: varchar("recipient", { length: 255 }).notNull(),
+    donorId: varchar("donorId", { length: 255 }).notNull(),
+    recipientId: varchar("recipient", { length: 255 }).notNull(),
     amount: int("amount").notNull(),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
   },
   (donation) => ({
-    donorIdIdx: index("userId_idx").on(donation.donor),
-    recipientIdIdx: index("recipientId_idx").on(donation.recipient),
+    donorIdIdx: index("userId_idx").on(donation.donorId),
+    recipientIdIdx: index("recipientId_idx").on(donation.recipientId),
   }),
 );
 
-export const donationsRelations = relations(donations, ({ one }) => ({
-  donor: one(users, { fields: [donations.donor], references: [users.id] }),
+export const donationRelations = relations(donations, ({ one }) => ({
+  donor: one(users, { fields: [donations.donorId], references: [users.id] }),
   recipient: one(users, {
-    fields: [donations.recipient],
+    fields: [donations.recipientId],
+    references: [users.id],
+  }),
+}));
+
+/**
+ * Animals
+ */
+
+export const animals = createTable(
+  "animal",
+  {
+    id: varchar("id", { length: 255 }).notNull().primaryKey(),
+    name: varchar("name", { length: 255 }).notNull(),
+    species: varchar("species", { length: 255 }).notNull(),
+    breed: varchar("breed", { length: 255 }),
+    birthday: timestamp("birthday", { mode: "date" }),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+  },
+  (animal) => ({
+    nameIdx: index("name_idx").on(animal.name),
+    speciesIdx: index("species_idx").on(animal.species),
+  }),
+);
+
+/**
+ * Adoptions
+ */
+
+export const adoptions = createTable(
+  "adoption",
+  {
+    id: varchar("id", { length: 255 }).notNull().primaryKey(),
+    animalId: varchar("animalId", { length: 255 }).notNull(),
+    adopterId: varchar("adopterId", { length: 255 }).notNull(),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+  },
+  (adoption) => ({
+    animalIdIdx: index("animalId_idx").on(adoption.animalId),
+    adopterIdIdx: index("adopterId_idx").on(adoption.adopterId),
+  }),
+);
+
+export const adoptionsRelations = relations(adoptions, ({ one }) => ({
+  animal: one(animals, {
+    fields: [adoptions.animalId],
+    references: [animals.id],
+  }),
+  adopter: one(users, {
+    fields: [adoptions.adopterId],
     references: [users.id],
   }),
 }));
