@@ -15,6 +15,7 @@ import {
 import { ProfileCard } from "../profile/profile-card";
 import { Card } from "../ui/card";
 import { DonationDrawer } from "../payment/donation-drawer";
+import { toast } from "sonner";
 
 export function LeftSideBar() {
   const { data: session } = useSession();
@@ -51,13 +52,14 @@ export function LeftSideBar() {
       <UploadDropzone
         endpoint="imageUploader"
         onClientUploadComplete={(res) => {
-          // Do something with the response
           console.log("Files: ", res);
-          alert("Upload Completed");
+          toast.success("Image uploaded successfully!");
         }}
         onUploadError={(error: Error) => {
-          // Do something with the error.
-          alert(`ERROR! ${error.message}`);
+          toast.error(`ERROR! ${error.message}`);
+        }}
+        onUploadBegin={() => {
+          toast.info("Uploading image...");
         }}
       />
     </aside>
