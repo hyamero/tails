@@ -34,6 +34,8 @@ export const posts = createTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
+    imageLink: varchar("imageLink", { length: 255 }),
+    params: varchar("params", { length: 255 }),
   },
   (post) => ({
     authorIdIdx: index("authorId_idx").on(post.authorId),
