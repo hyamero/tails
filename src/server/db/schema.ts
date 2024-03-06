@@ -78,6 +78,39 @@ export const likesRelations = relations(likes, ({ one }) => ({
   post: one(posts, { fields: [likes.postId], references: [posts.id] }),
 }));
 
+/**
+ * Donation
+ */
+
+export const donations = createTable(
+  "donation",
+  {
+    id: varchar("id", { length: 255 }).notNull().primaryKey(),
+    donor: varchar("donor", { length: 255 }).notNull(),
+    recipient: varchar("recipient", { length: 255 }).notNull(),
+    amount: int("amount").notNull(),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+  },
+  (donation) => ({
+    donorIdIdx: index("userId_idx").on(donation.donor),
+    recipientIdIdx: index("recipientId_idx").on(donation.recipient),
+  }),
+);
+
+export const donationsRelations = relations(donations, ({ one }) => ({
+  donor: one(users, { fields: [donations.donor], references: [users.id] }),
+  recipient: one(users, {
+    fields: [donations.recipient],
+    references: [users.id],
+  }),
+}));
+
+/**
+ * Users
+ */
+
 export const users = createTable("user", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
   userType: mysqlEnum("userType", ["user", "admin", "org"]).notNull(),
