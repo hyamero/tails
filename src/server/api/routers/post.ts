@@ -112,11 +112,17 @@ export const postRouter = createTRPCRouter({
     }),
 
   create: protectedProcedure
-    .input(z.object({ content: z.string().min(1) }))
+    .input(
+      z.object({
+        content: z.string().min(1),
+        imageLink: z.string().optional(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       await ctx.db.insert(posts).values({
         authorId: ctx.session.user.id,
         content: input.content,
+        imageLink: input.imageLink,
         id: nanoid(11),
       });
 
@@ -158,12 +164,19 @@ export const postRouter = createTRPCRouter({
     }),
 
   createComment: protectedProcedure
-    .input(z.object({ postId: z.string(), content: z.string().min(1) }))
+    .input(
+      z.object({
+        postId: z.string(),
+        content: z.string().min(1),
+        imageLink: z.string().optional(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       await ctx.db.insert(posts).values({
         authorId: ctx.session.user.id,
         content: input.content,
         parentId: input.postId,
+        imageLink: input.imageLink,
         id: nanoid(11),
       });
 
