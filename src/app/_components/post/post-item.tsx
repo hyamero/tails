@@ -25,6 +25,8 @@ import { useBoundStore } from "~/lib/utils/use-bound-store";
 import { ProfileHoverCard } from "../profile/profile-hovercard";
 import { ViewLikes } from "./view-likes";
 import { useSession } from "next-auth/react";
+import { AspectRatio } from "../ui/aspect-ratio";
+import Image from "next/image";
 
 type PostItemProps = {
   post: Post;
@@ -169,16 +171,32 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
               </div>
             </div>
 
-            {!pathname.includes("/post") && postType === "post" ? (
-              <Link
-                href={`/user/${userSlug}/post/${post.id}`}
-                className="whitespace-pre-wrap text-foreground"
-              >
-                {post.content}
-              </Link>
-            ) : (
-              <p className="whitespace-pre-wrap">{post.content}</p>
-            )}
+            <div>
+              {!pathname.includes("/post") && postType === "post" ? (
+                <Link
+                  href={`/user/${userSlug}/post/${post.id}`}
+                  className="whitespace-pre-wrap text-foreground"
+                >
+                  {post.content}
+                </Link>
+              ) : (
+                <p className="whitespace-pre-wrap">{post.content}</p>
+              )}
+
+              {post.imageLink && (
+                <AspectRatio
+                  ratio={16 / 9}
+                  className="mt-2 rounded-md bg-muted"
+                >
+                  <Image
+                    src={post.imageLink}
+                    alt="post image"
+                    fill
+                    className="rounded-md object-cover"
+                  />
+                </AspectRatio>
+              )}
+            </div>
 
             {postType === "post" && (
               <>
