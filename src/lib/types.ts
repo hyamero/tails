@@ -8,6 +8,8 @@ export type PostItem = {
   likedByUser: boolean;
   parentId: string | null;
   replies: number;
+  imageLink: string | null;
+  params: string | null;
 };
 
 export type TempPostItem = Omit<
