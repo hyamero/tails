@@ -20,6 +20,7 @@ import {
   AvatarFallback,
 } from "~/app/_components/ui/avatar";
 import { useBoundStore } from "~/lib/utils/use-bound-store";
+import { UploadDropzone } from "~/lib/utils/uploadthing";
 
 type PostFormProps = {
   user: Session["user"];
@@ -33,6 +34,9 @@ type PostFormProps = {
 export const PostForm = ({ user, formType, post }: PostFormProps) => {
   const router = useRouter();
   const [inputValue, setInputValue] = useState("");
+
+  const [imagePost, setImagePost] = useState(false);
+  const [imageLink, setImageLink] = useState("");
 
   const togglePostFormIsOpen = useBoundStore(
     (state) => state.modalActions.togglePostFormIsOpen,
@@ -117,12 +121,16 @@ export const PostForm = ({ user, formType, post }: PostFormProps) => {
     if (inputValue.trim() === "") return;
 
     if (formType === "post") {
-      createPost.mutate({ content: inputValue });
+      createPost.mutate({ content: inputValue, imageLink });
       togglePostFormIsOpen();
     } else {
       if (!post) return;
 
-      createComment.mutate({ content: inputValue, postId: post.postId });
+      createComment.mutate({
+        content: inputValue,
+        postId: post.postId,
+        imageLink,
+      });
     }
   };
 
@@ -160,9 +168,31 @@ export const PostForm = ({ user, formType, post }: PostFormProps) => {
           />
         </div>
       </div>
-
+      {imagePost && (
+        <UploadDropzone
+          endpoint="imageUploader"
+          onClientUploadComplete={(res) => {
+            setImageLink(res[0]?.url ?? "");
+            toast.success("Image uploaded successfully!");
+          }}
+          onUploadError={(error: Error) => {
+            toast.error(`ERROR! ${error.message}`);
+          }}
+          onUploadBegin={() => {
+            toast.info("Uploading image...");
+          }}
+        />
+      )}
       <div className="flex items-center justify-between gap-3">
-        <p className="cursor-pointer text-zinc-500">Your followers can reply</p>
+        <div>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setImagePost(!imagePost)}
+          >
+            {imagePost ? "Close" : "Upload Image"}
+          </Button>
+        </div>
         <div className="space-x-3">
           <span
             className={textAreaCount > 500 ? "text-red-500" : "text-zinc-500"}
@@ -176,7 +206,8 @@ export const PostForm = ({ user, formType, post }: PostFormProps) => {
             disabled={
               createPost.isLoading ||
               inputValue.trim() === "" ||
-              textAreaCount > 500
+              textAreaCount > 500 ||
+              (!imageLink && imagePost)
             }
           >
             {createPost.isLoading ? "Posting..." : "Post"}
