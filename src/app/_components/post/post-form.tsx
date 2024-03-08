@@ -170,6 +170,7 @@ export const PostForm = ({ user, formType, post }: PostFormProps) => {
       </div>
       {imagePost && (
         <UploadDropzone
+          className="cursor-pointer"
           endpoint="imageUploader"
           onClientUploadComplete={(res) => {
             setImageLink(res[0]?.url ?? "");

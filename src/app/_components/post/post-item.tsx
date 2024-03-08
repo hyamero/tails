@@ -27,6 +27,7 @@ import { ViewLikes } from "./view-likes";
 import { useSession } from "next-auth/react";
 import { AspectRatio } from "../ui/aspect-ratio";
 import Image from "next/image";
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 
 type PostItemProps = {
   post: Post;
@@ -184,17 +185,34 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
               )}
 
               {post.imageLink && (
-                <AspectRatio
-                  ratio={16 / 9}
-                  className="mt-2 rounded-md bg-muted"
-                >
-                  <Image
-                    src={post.imageLink}
-                    alt="post image"
-                    fill
-                    className="rounded-md object-cover"
-                  />
-                </AspectRatio>
+                <Dialog>
+                  <DialogTrigger asChild className="cursor-pointer">
+                    <AspectRatio
+                      ratio={16 / 9}
+                      className="mt-2 rounded-md bg-muted"
+                    >
+                      <Image
+                        src={post.imageLink}
+                        alt="post image"
+                        fill
+                        className="rounded-md object-cover"
+                      />
+                    </AspectRatio>
+                  </DialogTrigger>
+                  <DialogContent className="w-screen max-w-[50%]">
+                    <AspectRatio
+                      ratio={16 / 9}
+                      className="mt-2 rounded-md bg-muted"
+                    >
+                      <Image
+                        src={post.imageLink}
+                        alt="post image"
+                        fill
+                        className="rounded-md object-cover"
+                      />
+                    </AspectRatio>
+                  </DialogContent>
+                </Dialog>
               )}
             </div>
 
