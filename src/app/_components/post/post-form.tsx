@@ -23,6 +23,11 @@ import {
 import { useBoundStore } from "~/lib/utils/use-bound-store";
 import { UploadDropzone } from "~/lib/utils/uploadthing";
 import { AspectRatio } from "../ui/aspect-ratio";
+import { Switch } from "../ui/switch";
+
+import { PiDotsThree, PiImageFill } from "react-icons/pi";
+
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 
 type PostFormProps = {
   user: Session["user"];
@@ -37,8 +42,12 @@ export const PostForm = ({ user, formType, post }: PostFormProps) => {
   const router = useRouter();
   const [inputValue, setInputValue] = useState("");
 
-  const [imagePost, setImagePost] = useState(false);
   const [imageLink, setImageLink] = useState("");
+
+  const [postParams, setPostParams] = useState({
+    imagePost: false,
+    donation: false,
+  });
 
   const togglePostFormIsOpen = useBoundStore(
     (state) => state.modalActions.togglePostFormIsOpen,
@@ -173,7 +182,7 @@ export const PostForm = ({ user, formType, post }: PostFormProps) => {
           />
         </div>
       </div>
-      {imagePost &&
+      {postParams.imagePost &&
         (!imageLink ? (
           <UploadDropzone
             className="cursor-pointer"
@@ -200,18 +209,56 @@ export const PostForm = ({ user, formType, post }: PostFormProps) => {
           </AspectRatio>
         ))}
       <div className="flex items-center justify-between gap-3">
-        <div>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setImagePost(!imagePost)}
-          >
-            {imagePost ? "Close" : "Upload Image"}
-          </Button>
+        <div className="flex items-center gap-3">
+          <PiImageFill
+            className="cursor-pointer text-xl text-muted-foreground"
+            onClick={() =>
+              setPostParams({
+                ...postParams,
+                imagePost: !postParams.imagePost,
+              })
+            }
+          />
+
+          <Dialog>
+            <DialogTrigger asChild>
+              <PiDotsThree className="cursor-pointer text-2xl" />
+            </DialogTrigger>
+            <DialogContent className="max-w-xs">
+              <p className="font-semibold">Select custom post properties</p>
+              <div className="mt-10 flex flex-col gap-5">
+                <div className=" flex items-center justify-between">
+                  <div className="flex flex-col">
+                    <span className=" text-muted-foreground">Donations</span>
+                  </div>
+
+                  <Switch
+                    checked={postParams.donation}
+                    onCheckedChange={() =>
+                      setPostParams({
+                        ...postParams,
+                        donation: !postParams.donation,
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex flex-col">
+                    <span className=" text-muted-foreground">Adoption</span>
+                  </div>
+
+                  <Switch />
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
         <div className="space-x-3">
           <span
-            className={textAreaCount > 500 ? "text-red-500" : "text-zinc-500"}
+            className={
+              textAreaCount > 500 ? "text-red-500" : "text-muted-foreground"
+            }
           >
             {textAreaCount >= 450 ? 500 - textAreaCount : null}
           </span>
@@ -223,7 +270,7 @@ export const PostForm = ({ user, formType, post }: PostFormProps) => {
               createPost.isLoading ||
               inputValue.trim() === "" ||
               textAreaCount > 500 ||
-              (!imageLink && imagePost)
+              (!imageLink && postParams.imagePost)
             }
           >
             {createPost.isLoading ? "Posting..." : "Post"}
