@@ -10,6 +10,7 @@ import {
 
 import { toast } from "sonner";
 import { api } from "~/trpc/react";
+import Image from "next/image";
 import { Button } from "../ui/button";
 import type { Session } from "next-auth";
 import { useRouter } from "next/navigation";
@@ -21,6 +22,7 @@ import {
 } from "~/app/_components/ui/avatar";
 import { useBoundStore } from "~/lib/utils/use-bound-store";
 import { UploadDropzone } from "~/lib/utils/uploadthing";
+import { AspectRatio } from "../ui/aspect-ratio";
 
 type PostFormProps = {
   user: Session["user"];
@@ -82,6 +84,7 @@ export const PostForm = ({ user, formType, post }: PostFormProps) => {
       setTempPosts(data);
       toast.success("Post created!");
       setInputValue("");
+      setImageLink("");
     },
 
     onError: () => {
@@ -97,6 +100,8 @@ export const PostForm = ({ user, formType, post }: PostFormProps) => {
     onSuccess: (data) => {
       setTempComments(data);
       setInputValue("");
+      setImageLink("");
+
       setCommentFormIsOpen(false);
       toast("Success!", {
         description: "You have replied to the post.",
@@ -168,22 +173,32 @@ export const PostForm = ({ user, formType, post }: PostFormProps) => {
           />
         </div>
       </div>
-      {imagePost && (
-        <UploadDropzone
-          className="cursor-pointer"
-          endpoint="imageUploader"
-          onClientUploadComplete={(res) => {
-            setImageLink(res[0]?.url ?? "");
-            toast.success("Image uploaded successfully!");
-          }}
-          onUploadError={(error: Error) => {
-            toast.error(`ERROR! ${error.message}`);
-          }}
-          onUploadBegin={() => {
-            toast.info("Uploading image...");
-          }}
-        />
-      )}
+      {imagePost &&
+        (!imageLink ? (
+          <UploadDropzone
+            className="cursor-pointer"
+            endpoint="imageUploader"
+            onClientUploadComplete={(res) => {
+              setImageLink(res[0]?.url ?? "");
+              toast.success("Image uploaded successfully!");
+            }}
+            onUploadError={(error: Error) => {
+              toast.error(`ERROR! ${error.message}`);
+            }}
+            onUploadBegin={() => {
+              toast.info("Uploading image...");
+            }}
+          />
+        ) : (
+          <AspectRatio ratio={16 / 9} className="mt-2 rounded-md bg-muted">
+            <Image
+              src={imageLink}
+              alt="post image"
+              fill
+              className="rounded-md object-cover"
+            />
+          </AspectRatio>
+        ))}
       <div className="flex items-center justify-between gap-3">
         <div>
           <Button
