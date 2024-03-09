@@ -1,7 +1,14 @@
 "use client";
 
+import { toast } from "sonner";
+import { api } from "~/trpc/react";
+import { useBoundStore } from "~/lib/utils/use-bound-store";
+
 import { Icons } from "~/app/_components/icons";
-import { Button } from "~/app/_components/ui/button";
+import { Input } from "~/app/_components/ui/input";
+import { Label } from "~/app/_components/ui/label";
+import { RadioGroup, RadioGroupItem } from "~/app/_components/ui/radio-group";
+
 import {
   Card,
   CardContent,
@@ -10,9 +17,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/app/_components/ui/card";
-import { Input } from "~/app/_components/ui/input";
-import { Label } from "~/app/_components/ui/label";
-import { RadioGroup, RadioGroupItem } from "~/app/_components/ui/radio-group";
+
 import {
   Select,
   SelectContent,
@@ -20,8 +25,41 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/app/_components/ui/select";
+import { useState } from "react";
+import { Modal } from "../modal/modal";
+import { Button } from "../ui/button";
+import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 export function PaymentMethod() {
+  const params = useParams();
+
+  const [openModal, setOpenModal] = useState(false);
+
+  const setDonation = useBoundStore((state) => state.setDonation);
+
+  const donationAmount = useBoundStore((state) => state.donationAmount);
+
+  const { mutate: createDonation, isSuccess } =
+    api.transaction.createDonation.useMutation({
+      onSuccess: () => {
+        toast.success("Payment successful!");
+        setDonation(350);
+      },
+    });
+
+  if (!isSuccess) return <PaymentSuccess />;
+
+  const handlePayment = () => {
+    createDonation({
+      recipientId: params.id as string,
+      amount: donationAmount,
+    });
+
+    toast.info("Processing payment...");
+  };
+
   return (
     <Card className="max-w-lg">
       <CardHeader>
@@ -149,8 +187,42 @@ export function PaymentMethod() {
         </div>
       </CardContent>
       <CardFooter>
-        <Button className="w-full">Continue</Button>
+        <Button onClick={() => setOpenModal(!openModal)} className="w-full">
+          Continue
+        </Button>
+
+        <Modal
+          modalState={openModal}
+          modalAction={() => setOpenModal(!openModal)}
+          title="Are you sure?"
+          description={`You are about to donate ₱${donationAmount}. Proceed?`}
+          confirmButton="Continue"
+          confirmAction={handlePayment}
+        />
       </CardFooter>
     </Card>
   );
 }
+
+const PaymentSuccess = () => {
+  const { data: session } = useSession();
+
+  return (
+    <div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Payment Successful!</CardTitle>
+          <CardDescription>
+            Thank you for your donation, {session?.user.name}!{" "}
+          </CardDescription>
+        </CardHeader>
+
+        <CardFooter>
+          <Link href="/" className="w-full">
+            <Button className="w-full">Return Home</Button>
+          </Link>
+        </CardFooter>
+      </Card>
+    </div>
+  );
+};
