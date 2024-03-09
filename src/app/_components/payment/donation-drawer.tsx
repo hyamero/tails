@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Minus, Plus } from "lucide-react";
 import { Bar, BarChart, ResponsiveContainer } from "recharts";
+import { CreditCard } from "lucide-react";
 
 import { Button } from "~/app/_components/ui/button";
 import {
@@ -67,8 +68,9 @@ export function DonationDrawer() {
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button variant="outline" className="text-foreground">
-          Donate Button
+        <Button className="flex items-center font-semibold">
+          <CreditCard className="mt-[2px] h-4" />
+          <div>Donate</div>
         </Button>
       </DrawerTrigger>
       <DrawerContent>

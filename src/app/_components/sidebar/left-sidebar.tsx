@@ -4,7 +4,6 @@ import { type User } from "~/lib/types";
 import { useSession } from "next-auth/react";
 import { useBoundStore } from "~/lib/utils/use-bound-store";
 import { BudgetStats } from "../payment/budget-stats";
-import { UploadDropzone } from "~/lib/utils/uploadthing";
 
 import {
   Accordion,
@@ -14,8 +13,6 @@ import {
 } from "../ui/accordion";
 import { ProfileCard } from "../profile/profile-card";
 import { Card } from "../ui/card";
-import { DonationDrawer } from "../payment/donation-drawer";
-import { toast } from "sonner";
 
 export function LeftSideBar() {
   const { data: session } = useSession();
@@ -47,21 +44,6 @@ export function LeftSideBar() {
           </AccordionItem>
         </Accordion>
       )}
-      <DonationDrawer />
-
-      <UploadDropzone
-        endpoint="imageUploader"
-        onClientUploadComplete={(res) => {
-          console.log("Files: ", res);
-          toast.success("Image uploaded successfully!");
-        }}
-        onUploadError={(error: Error) => {
-          toast.error(`ERROR! ${error.message}`);
-        }}
-        onUploadBegin={() => {
-          toast.info("Uploading image...");
-        }}
-      />
     </aside>
   );
 }

@@ -2,15 +2,19 @@
 
 import Link from "next/link";
 import { toast } from "sonner";
+import Image from "next/image";
 import { api } from "~/trpc/react";
+import type { Post } from "~/lib/types";
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 
-import type { Post } from "~/lib/types";
-import { PiChatCircle, PiHeart, PiHeartFill } from "react-icons/pi";
 import { formatDistance } from "~/lib/hooks/format-distance";
 import { formatDistanceToNowStrict, formatRelative } from "date-fns";
+import { useBoundStore } from "~/lib/utils/use-bound-store";
+import { useSession } from "next-auth/react";
+import { AspectRatio } from "../ui/aspect-ratio";
 
+import { PiChatCircle, PiHeart, PiHeartFill } from "react-icons/pi";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 import { PostDropdownMenu } from "./post-dropdown-menu";
 
@@ -21,13 +25,10 @@ import {
   TooltipProvider,
 } from "../ui/tooltip";
 
-import { useBoundStore } from "~/lib/utils/use-bound-store";
 import { ProfileHoverCard } from "../profile/profile-hovercard";
 import { ViewLikes } from "./view-likes";
-import { useSession } from "next-auth/react";
-import { AspectRatio } from "../ui/aspect-ratio";
-import Image from "next/image";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
+import { DonationDrawer } from "../payment/donation-drawer";
 
 type PostItemProps = {
   post: Post;
@@ -218,28 +219,32 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
 
             {postType === "post" && (
               <>
-                <div className="relative right-[0.4rem] mt-[6px] text-foreground">
-                  <button
-                    title="like"
-                    type="button"
-                    className="rounded-full p-[0.4rem] transition-colors duration-200 hover:bg-zinc-100"
-                    onClick={handleToggleLikeCount}
-                  >
-                    {likedByUser ? (
-                      <PiHeartFill className="transform text-2xl text-red-500 transition-transform active:scale-90" />
-                    ) : (
-                      <PiHeart className="transform text-2xl transition-transform active:scale-90" />
-                    )}
-                  </button>
+                <div className="flex items-center justify-between">
+                  <div className="relative right-[0.4rem] mt-[6px] text-foreground">
+                    <button
+                      title="like"
+                      type="button"
+                      className="rounded-full p-[0.4rem] transition-colors duration-200 hover:bg-zinc-100"
+                      onClick={handleToggleLikeCount}
+                    >
+                      {likedByUser ? (
+                        <PiHeartFill className="transform text-2xl text-red-500 transition-transform active:scale-90" />
+                      ) : (
+                        <PiHeart className="transform text-2xl transition-transform active:scale-90" />
+                      )}
+                    </button>
 
-                  <button
-                    title="comment"
-                    type="button"
-                    className="rounded-full p-[0.4rem] transition-colors duration-200 hover:bg-zinc-100"
-                    onClick={handleReply}
-                  >
-                    <PiChatCircle className="text-2xl" />
-                  </button>
+                    <button
+                      title="comment"
+                      type="button"
+                      className="rounded-full p-[0.4rem] transition-colors duration-200 hover:bg-zinc-100"
+                      onClick={handleReply}
+                    >
+                      <PiChatCircle className="text-2xl" />
+                    </button>
+                  </div>
+
+                  {post.params?.includes("donation") && <DonationDrawer />}
                 </div>
 
                 <div className="space-x-3">
