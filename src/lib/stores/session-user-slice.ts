@@ -15,9 +15,9 @@ type SessionUserSliceActions = {
 
 export type SessionUserSlice = SessionUser & SessionUserSliceActions;
 
-export const createSessionUserSlice: StateCreator<
-  SessionUserSlice & SessionUserSliceActions
-> = (set) => ({
+export const createSessionUserSlice: StateCreator<SessionUserSlice> = (
+  set,
+) => ({
   user: {
     name: null,
     username: null,

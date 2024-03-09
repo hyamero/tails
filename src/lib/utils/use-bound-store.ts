@@ -16,11 +16,21 @@ import {
   createSessionUserSlice,
 } from "../stores/session-user-slice";
 
+import {
+  type TransactionsSlice,
+  createTransactionsSlice,
+} from "../stores/transactions-slice";
+
 export const useBoundStore = create<
-  TempPostSlice & ModalSlice & TempCommentSlice & SessionUserSlice
+  TempPostSlice &
+    ModalSlice &
+    TempCommentSlice &
+    SessionUserSlice &
+    TransactionsSlice
 >((...a) => ({
   ...createSessionUserSlice(...a),
   ...createTempPostSlice(...a),
   ...createModalSlice(...a),
   ...createTempCommentSlice(...a),
+  ...createTransactionsSlice(...a),
 }));
