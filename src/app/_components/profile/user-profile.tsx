@@ -5,8 +5,8 @@ import Link from "next/link";
 
 import {
   Avatar,
-  AvatarFallback,
   AvatarImage,
+  AvatarFallback,
 } from "~/app/_components/ui/avatar";
 
 import { type User } from "~/lib/types";
@@ -21,19 +21,27 @@ import {
   TabsList,
   TabsTrigger,
 } from "~/app/_components/ui/tabs";
-import { useSession } from "next-auth/react";
-import { BudgetStats } from "../payment/budget-stats";
-import { useRouter } from "next/navigation";
 
-export default function UserProfile({ user }: { user?: User }) {
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { BudgetStats } from "../payment/budget-stats";
+import { RecentDonations } from "../payment/recent-donations";
+
+export default function UserProfile({
+  user,
+  className,
+}: {
+  user?: User;
+  className?: string;
+}) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const { data: session, status } = useSession();
   const router = useRouter();
+  const { data: session, status } = useSession();
   const isCurrentUser = session?.user?.id === user?.id;
 
   useEffect(() => {
@@ -66,8 +74,8 @@ export default function UserProfile({ user }: { user?: User }) {
 
   return (
     mounted && (
-      <main className="container mx-auto max-w-xl">
-        <section>
+      <main className={`container ${className}`}>
+        <section className="mx-auto w-full max-w-xl">
           <div className="flex items-center justify-between py-5">
             <div>
               <p className="text-3xl font-bold">{user.name}</p>
@@ -109,8 +117,8 @@ export default function UserProfile({ user }: { user?: User }) {
               </Button>
             </div>
           )}
+          <TabsContents userId={user.id} userType={user.userType} />
         </section>
-        <TabsContents userId={user.id} userType={user.userType} />
       </main>
     )
   );
@@ -152,15 +160,8 @@ const TabsContents = ({
       value: "posts",
     },
     {
-      component: () => (
-        <div className="flex flex-col gap-5">
-          <BudgetStats />
-          <Button>
-            <Link href="/dashboard">Visit Dashboard</Link>
-          </Button>
-        </div>
-      ),
-      value: "statistics",
+      component: () => <RecentDonations />,
+      value: "activity",
     },
     {
       component: () => (
