@@ -13,18 +13,23 @@ import {
 } from "../ui/accordion";
 import { ProfileCard } from "../profile/profile-card";
 import { Card } from "../ui/card";
+import { usePathname } from "next/navigation";
 
 export function LeftSideBar() {
   const { data: session } = useSession();
   const sessionUser = useBoundStore((state) => state.user);
 
+  const pathname = usePathname();
+
   if (!session || !sessionUser) return null;
 
   return (
     <aside className="mx-auto w-full max-w-xl space-y-2">
-      <Card className="flex items-center justify-between space-x-4 p-5">
-        <ProfileCard author={{ ...session.user, ...sessionUser } as User} />
-      </Card>
+      {!pathname.includes("user") && (
+        <Card className="flex items-center justify-between space-x-4 p-5">
+          <ProfileCard author={{ ...session.user, ...sessionUser } as User} />
+        </Card>
+      )}
 
       {sessionUser.userType === "org" && (
         <Accordion
