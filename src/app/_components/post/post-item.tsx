@@ -244,7 +244,11 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
                     </button>
                   </div>
 
-                  {post.params?.includes("donation") && <DonationDrawer />}
+                  {post.params?.includes("donation") && (
+                    <DonationDrawer
+                      orgId={post.author.username ?? post.authorId}
+                    />
+                  )}
                 </div>
 
                 <div className="space-x-3">

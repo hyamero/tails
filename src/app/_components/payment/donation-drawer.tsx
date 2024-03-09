@@ -1,9 +1,12 @@
 import * as React from "react";
 import { Minus, Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
+
 import { Bar, BarChart, ResponsiveContainer } from "recharts";
+import { useBoundStore } from "~/lib/utils/use-bound-store";
+import { Button } from "~/app/_components/ui/button";
 import { CreditCard } from "lucide-react";
 
-import { Button } from "~/app/_components/ui/button";
 import {
   Drawer,
   DrawerClose,
@@ -14,7 +17,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "~/app/_components/ui/drawer";
-import Link from "next/link";
 
 const data = [
   {
@@ -58,12 +60,21 @@ const data = [
   },
 ];
 
-export function DonationDrawer() {
+export function DonationDrawer({ orgId }: { orgId: string }) {
+  const setDonation = useBoundStore((state) => state.setDonation);
+
   const [amount, setAmount] = React.useState(350);
 
   function onClick(adjustment: number) {
-    setAmount(Math.max(200, Math.min(400, amount + adjustment)));
+    setAmount(Math.max(200, Math.min(10000, amount + adjustment)));
   }
+
+  const router = useRouter();
+
+  const handleDonation = () => {
+    setDonation(amount);
+    router.push(`/donate/${orgId}`);
+  };
 
   return (
     <Drawer>
@@ -80,21 +91,25 @@ export function DonationDrawer() {
             <DrawerDescription>Set your donation amount.</DrawerDescription>
           </DrawerHeader>
           <div className="p-4 pb-0">
-            <div className="flex items-center justify-center space-x-2">
+            <div className="flex max-w-sm items-center justify-center space-x-2">
               <Button
                 variant="outline"
                 size="icon"
                 className="h-8 w-8 shrink-0 rounded-full"
-                onClick={() => onClick(-10)}
+                onClick={() => onClick(-50)}
                 disabled={amount <= 200}
               >
                 <Minus className="h-4 w-4" />
                 <span className="sr-only">Decrease</span>
               </Button>
               <div className="flex-1 text-center">
-                <div className="text-7xl font-bold tracking-tighter">
-                  {amount}
-                </div>
+                <input
+                  type="number"
+                  value={amount}
+                  onChange={(e) => setAmount(parseInt(e.target.value))}
+                  className="w-full text-center text-7xl font-bold tracking-tighter [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                />
+
                 <div className="text-[0.70rem] uppercase text-muted-foreground">
                   Pesos
                 </div>
@@ -103,8 +118,8 @@ export function DonationDrawer() {
                 variant="outline"
                 size="icon"
                 className="h-8 w-8 shrink-0 rounded-full"
-                onClick={() => onClick(10)}
-                disabled={amount >= 400}
+                onClick={() => onClick(50)}
+                disabled={amount >= 10000}
               >
                 <Plus className="h-4 w-4" />
                 <span className="sr-only">Increase</span>
@@ -127,9 +142,9 @@ export function DonationDrawer() {
             </div>
           </div>
           <DrawerFooter>
-            <Link href="donate/test">
-              <Button className="w-full">Donate</Button>
-            </Link>
+            <Button onClick={() => handleDonation()} className="w-full">
+              Donate
+            </Button>
             <DrawerClose asChild>
               <Button variant="outline">Cancel</Button>
             </DrawerClose>
