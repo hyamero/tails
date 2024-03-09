@@ -116,6 +116,7 @@ export const postRouter = createTRPCRouter({
       z.object({
         content: z.string().min(1),
         imageLink: z.string().optional(),
+        params: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -123,6 +124,7 @@ export const postRouter = createTRPCRouter({
         authorId: ctx.session.user.id,
         content: input.content,
         imageLink: input.imageLink,
+        params: input.params,
         id: nanoid(11),
       });
 

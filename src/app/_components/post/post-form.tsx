@@ -135,7 +135,11 @@ export const PostForm = ({ user, formType, post }: PostFormProps) => {
     if (inputValue.trim() === "") return;
 
     if (formType === "post") {
-      createPost.mutate({ content: inputValue, imageLink });
+      createPost.mutate({
+        content: inputValue,
+        imageLink,
+        params: postParams.donation ? "donation" : undefined,
+      });
       togglePostFormIsOpen();
     } else {
       if (!post) return;
@@ -226,7 +230,7 @@ export const PostForm = ({ user, formType, post }: PostFormProps) => {
             </DialogTrigger>
             <DialogContent className="max-w-xs">
               <p className="font-semibold">Select custom post properties</p>
-              <div className="mt-10 flex flex-col gap-5">
+              <div className="mt-5 flex flex-col gap-5">
                 <div className=" flex items-center justify-between">
                   <div className="flex flex-col">
                     <span className=" text-muted-foreground">Donations</span>
