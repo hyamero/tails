@@ -13,7 +13,7 @@ export type TransactionsSlice = Transactions & TransactionsSliceActions;
 export const createTransactionsSlice: StateCreator<TransactionsSlice> = (
   set,
 ) => ({
-  donationAmount: 0,
+  donationAmount: 350,
 
   setDonation: (amount) =>
     set(() => ({
