@@ -39,15 +39,14 @@ export default async function Page({ params }: { params: { id: string } }) {
   if (!post) return <p>Post not found.</p>;
 
   return (
-    <div className="container">
+    <div className="container mt-10 max-w-2xl">
       <CreateComment />
       <PostItem post={post as Post} />
-      {post && (
-        <div className="y-3 rounded-3xl">
-          {/* <TempComments /> */}
-          <Feed postId={post?.id} />
-        </div>
-      )}
+      <div className="ml-10 h-10 w-[1.5px] bg-muted-foreground"></div>
+      <div className="rounded-3xl">
+        {/* <TempComments /> */}
+        <Feed postId={post?.id} />
+      </div>
     </div>
   );
 }
