@@ -52,7 +52,7 @@ export function Feed({ authorId, postId, className }: PostsProps) {
 
   if (isError) toast.error(error.message);
   if (isLoading) return <Loading />;
-  if (posts?.pages.length === 0) return <p>No posts found.</p>;
+  if (!posts?.pages.length) return <p>No posts found.</p>;
 
   const existsInTempPosts = (postId: string) => {
     const tempPostId = tempPosts.find((post) => post.id === postId);

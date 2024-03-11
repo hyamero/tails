@@ -18,8 +18,10 @@ import {
 } from "../ui/tooltip";
 import { ProfileHoverCard } from "../profile/profile-hovercard";
 
-export function RecentDonations({ recipient }: { recipient: string }) {
-  const donations = api.transaction.getDonations.useQuery({ recipient });
+export function RecentDonations({ recipient }: { recipient: string | null }) {
+  const donations = api.transaction.getDonations.useQuery({
+    recipient: recipient!,
+  });
 
   function totalAmount() {
     let sum = 0;

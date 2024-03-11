@@ -75,7 +75,10 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
                     {post.author.name}
                   </Link>
                 </ProfileHoverCard>
-                <p className="text-xs text-muted-foreground">Description...</p>
+                <p className="text-xs text-muted-foreground">
+                  {post.author.userType === "org" ? "Organization" : "User"} ·{" "}
+                  {post.author.username && "@" + post.author.username}
+                </p>
               </div>
             </div>
 
@@ -119,7 +122,7 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
               <p className="whitespace-pre-wrap">{post.content}</p>
             )}
 
-            {post.imageLink && (
+            {post.imgUrl && (
               <Dialog>
                 <DialogTrigger asChild className="cursor-pointer">
                   <AspectRatio
@@ -127,7 +130,7 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
                     className="my-3 rounded-md bg-muted"
                   >
                     <Image
-                      src={post.imageLink}
+                      src={post.imgUrl}
                       alt="post image"
                       fill
                       className="rounded-md object-cover"
@@ -140,7 +143,7 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
                     className="mt-2 rounded-md bg-muted"
                   >
                     <Image
-                      src={post.imageLink}
+                      src={post.imgUrl}
                       alt="post image"
                       fill
                       className="rounded-md object-cover"
