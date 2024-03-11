@@ -53,7 +53,7 @@ export function PaymentMethod() {
 
   const handlePayment = () => {
     createDonation({
-      recipientId: params.id as string,
+      recipient: params.id as string,
       amount: donationAmount,
     });
 

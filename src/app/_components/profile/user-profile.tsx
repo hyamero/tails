@@ -116,7 +116,11 @@ export default function UserProfile({
               </Button>
             </div>
           )}
-          <TabsContents userId={user.id} userType={user.userType} />
+          <TabsContents
+            username={user.username}
+            userId={user.id}
+            userType={user.userType}
+          />
         </section>
       </main>
     )
@@ -126,9 +130,11 @@ export default function UserProfile({
 const TabsContents = ({
   userId,
   userType,
+  username,
 }: {
   userId: string;
   userType: User["userType"];
+  username: string;
 }) => {
   const userContents = [
     {
@@ -159,7 +165,7 @@ const TabsContents = ({
       value: "posts",
     },
     {
-      component: () => <RecentDonations recipientId={userId} />,
+      component: () => <RecentDonations recipient={username} />,
       value: "activity",
     },
     {

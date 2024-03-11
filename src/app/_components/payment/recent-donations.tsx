@@ -16,9 +16,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import { ProfileHoverCard } from "../profile/profile-hovercard";
 
-export function RecentDonations({ recipientId }: { recipientId: string }) {
-  const donations = api.transaction.getDonations.useQuery({ recipientId });
+export function RecentDonations({ recipient }: { recipient: string }) {
+  const donations = api.transaction.getDonations.useQuery({ recipient });
 
   function totalAmount() {
     let sum = 0;
@@ -46,20 +47,22 @@ export function RecentDonations({ recipientId }: { recipientId: string }) {
           const { id, amount, createdAt, donor } = donation;
 
           return (
-            <TableRow key={id}>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <TableCell className="font-medium">{i + 1}</TableCell>
-                  </TooltipTrigger>
-                  <TooltipContent>{id}</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+            <ProfileHoverCard key={id} userId="" author={donor}>
+              <TableRow>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <TableCell className="font-medium">{i + 1}</TableCell>
+                    </TooltipTrigger>
+                    <TooltipContent>{id}</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
 
-              <TableCell>{format(createdAt, "MM/dd/yyyy")}</TableCell>
-              <TableCell>{donor.username}</TableCell>
-              <TableCell className="text-right">₱{amount}</TableCell>
-            </TableRow>
+                <TableCell>{format(createdAt, "MM/dd/yyyy")}</TableCell>
+                <TableCell>{donor.username}</TableCell>
+                <TableCell className="text-right">₱{amount}</TableCell>
+              </TableRow>
+            </ProfileHoverCard>
           );
         })}
       </TableBody>

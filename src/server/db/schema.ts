@@ -89,7 +89,7 @@ export const donations = createTable(
   {
     id: varchar("id", { length: 255 }).notNull().primaryKey(),
     donorId: varchar("donorId", { length: 255 }).notNull(),
-    recipientId: varchar("recipient", { length: 255 }).notNull(),
+    recipient: varchar("recipient", { length: 255 }).notNull(),
     amount: int("amount").notNull(),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
@@ -97,14 +97,14 @@ export const donations = createTable(
   },
   (donation) => ({
     donorIdIdx: index("userId_idx").on(donation.donorId),
-    recipientIdIdx: index("recipientId_idx").on(donation.recipientId),
+    recipientIdIdx: index("recipientId_idx").on(donation.recipient),
   }),
 );
 
 export const donationRelations = relations(donations, ({ one }) => ({
   donor: one(users, { fields: [donations.donorId], references: [users.id] }),
   recipient: one(users, {
-    fields: [donations.recipientId],
+    fields: [donations.recipient],
     references: [users.id],
   }),
 }));
@@ -169,7 +169,7 @@ export const adoptionsRelations = relations(adoptions, ({ one }) => ({
 export const users = createTable("user", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
   userType: mysqlEnum("userType", ["user", "admin", "org"]).notNull(),
-  username: varchar("username", { length: 30 }).unique(),
+  username: varchar("username", { length: 30 }).unique().notNull(),
   name: varchar("name", { length: 255 }),
   email: varchar("email", { length: 255 }).notNull(),
   emailVerified: timestamp("emailVerified", {

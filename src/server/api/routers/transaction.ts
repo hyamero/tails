@@ -11,13 +11,13 @@ export const transactionRouter = createTRPCRouter({
     .input(
       z.object({
         amount: z.number(),
-        recipientId: z.string(),
+        recipient: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       await ctx.db.insert(donations).values({
         donorId: ctx.session.user.id,
-        recipientId: ctx.session.user.id,
+        recipient: input.recipient,
         amount: input.amount,
         id: nanoid(11),
       });
@@ -31,12 +31,12 @@ export const transactionRouter = createTRPCRouter({
   getDonations: protectedProcedure
     .input(
       z.object({
-        recipientId: z.string(),
+        recipient: z.string(),
       }),
     )
     .query(async ({ ctx, input }) => {
       return await ctx.db.query.donations.findMany({
-        where: eq(donations.recipientId, input.recipientId),
+        where: eq(donations.recipient, input.recipient),
         limit: 10,
         columns: {
           id: true,
@@ -45,11 +45,7 @@ export const transactionRouter = createTRPCRouter({
         },
 
         with: {
-          donor: {
-            columns: {
-              username: true,
-            },
-          },
+          donor: true,
         },
       });
     }),
