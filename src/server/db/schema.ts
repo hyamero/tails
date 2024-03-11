@@ -34,7 +34,7 @@ export const posts = createTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
-    imageLink: varchar("imageLink", { length: 255 }),
+    imgUrl: varchar("imgUrl", { length: 255 }),
     params: varchar("params", { length: 255 }),
   },
   (post) => ({
@@ -118,8 +118,10 @@ export const animals = createTable(
   {
     id: varchar("id", { length: 255 }).notNull().primaryKey(),
     name: varchar("name", { length: 255 }).notNull(),
+    ownerUsername: varchar("ownerUsername", { length: 255 }).notNull(),
     species: varchar("species", { length: 255 }).notNull(),
     breed: varchar("breed", { length: 255 }),
+    imgUrl: varchar("imgUrl", { length: 255 }),
     birthday: timestamp("birthday", { mode: "date" }),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
@@ -169,7 +171,7 @@ export const adoptionsRelations = relations(adoptions, ({ one }) => ({
 export const users = createTable("user", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
   userType: mysqlEnum("userType", ["user", "admin", "org"]).notNull(),
-  username: varchar("username", { length: 30 }).unique().notNull(),
+  username: varchar("username", { length: 30 }).unique(),
   name: varchar("name", { length: 255 }),
   email: varchar("email", { length: 255 }).notNull(),
   emailVerified: timestamp("emailVerified", {

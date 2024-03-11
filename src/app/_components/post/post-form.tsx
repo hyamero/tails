@@ -42,7 +42,7 @@ export const PostForm = ({ user, formType, post }: PostFormProps) => {
   const router = useRouter();
   const [inputValue, setInputValue] = useState("");
 
-  const [imageLink, setImageLink] = useState("");
+  const [imgUrl, setimgUrl] = useState("");
 
   const [postParams, setPostParams] = useState({
     imagePost: false,
@@ -93,7 +93,7 @@ export const PostForm = ({ user, formType, post }: PostFormProps) => {
       setTempPosts(data);
       toast.success("Post created!");
       setInputValue("");
-      setImageLink("");
+      setimgUrl("");
     },
 
     onError: () => {
@@ -109,7 +109,7 @@ export const PostForm = ({ user, formType, post }: PostFormProps) => {
     onSuccess: (data) => {
       setTempComments(data);
       setInputValue("");
-      setImageLink("");
+      setimgUrl("");
 
       setCommentFormIsOpen(false);
       toast("Success!", {
@@ -137,7 +137,7 @@ export const PostForm = ({ user, formType, post }: PostFormProps) => {
     if (formType === "post") {
       createPost.mutate({
         content: inputValue,
-        imageLink,
+        imgUrl,
         params: postParams.donation ? "donation" : undefined,
       });
       togglePostFormIsOpen();
@@ -147,7 +147,7 @@ export const PostForm = ({ user, formType, post }: PostFormProps) => {
       createComment.mutate({
         content: inputValue,
         postId: post.postId,
-        imageLink,
+        imgUrl,
       });
     }
   };
@@ -187,12 +187,12 @@ export const PostForm = ({ user, formType, post }: PostFormProps) => {
         </div>
       </div>
       {postParams.imagePost &&
-        (!imageLink ? (
+        (!imgUrl ? (
           <UploadDropzone
             className="cursor-pointer"
             endpoint="imageUploader"
             onClientUploadComplete={(res) => {
-              setImageLink(res[0]?.url ?? "");
+              setimgUrl(res[0]?.url ?? "");
               toast.success("Image uploaded successfully!");
             }}
             onUploadError={(error: Error) => {
@@ -205,7 +205,7 @@ export const PostForm = ({ user, formType, post }: PostFormProps) => {
         ) : (
           <AspectRatio ratio={16 / 9} className="mt-2 rounded-md bg-muted">
             <Image
-              src={imageLink}
+              src={imgUrl}
               alt="post image"
               fill
               className="rounded-md object-cover"
@@ -274,7 +274,7 @@ export const PostForm = ({ user, formType, post }: PostFormProps) => {
               createPost.isLoading ||
               inputValue.trim() === "" ||
               textAreaCount > 500 ||
-              (!imageLink && postParams.imagePost)
+              (!imgUrl && postParams.imagePost)
             }
           >
             {createPost.isLoading ? "Posting..." : "Post"}

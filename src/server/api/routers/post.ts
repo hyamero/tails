@@ -115,7 +115,7 @@ export const postRouter = createTRPCRouter({
     .input(
       z.object({
         content: z.string().min(1),
-        imageLink: z.string().optional(),
+        imgUrl: z.string().optional(),
         params: z.string().optional(),
       }),
     )
@@ -123,7 +123,7 @@ export const postRouter = createTRPCRouter({
       await ctx.db.insert(posts).values({
         authorId: ctx.session.user.id,
         content: input.content,
-        imageLink: input.imageLink,
+        imgUrl: input.imgUrl,
         params: input.params,
         id: nanoid(11),
       });
@@ -170,7 +170,7 @@ export const postRouter = createTRPCRouter({
       z.object({
         postId: z.string(),
         content: z.string().min(1),
-        imageLink: z.string().optional(),
+        imgUrl: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -178,7 +178,7 @@ export const postRouter = createTRPCRouter({
         authorId: ctx.session.user.id,
         content: input.content,
         parentId: input.postId,
-        imageLink: input.imageLink,
+        imgUrl: input.imgUrl,
         id: nanoid(11),
       });
 
