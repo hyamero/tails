@@ -159,7 +159,7 @@ const TabsContents = ({
       value: "posts",
     },
     {
-      component: () => <RecentDonations />,
+      component: () => <RecentDonations recipientId={userId} />,
       value: "activity",
     },
     {
