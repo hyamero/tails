@@ -38,69 +38,7 @@ type PostItemProps = {
 export function PostItem({ post, postType = "post" }: PostItemProps) {
   const { data: session } = useSession();
 
-  const router = useRouter();
   const pathname = usePathname();
-
-  const toggleCommentFormIsOpen = useBoundStore(
-    (state) => state.modalActions.toggleCommentFormIsOpen,
-  );
-
-  const [likedByUser, setLikedByUser] = useState(post.likedByUser);
-  const [likeCount, setLikeCount] = useState(post.likes);
-  const [likes, setLikes] = useState(
-    likeCount === 0 ? "" : likeCount === 1 ? "like" : "likes",
-  );
-
-  const toggleLike = api.post.toggleLike.useMutation({
-    onError: () => {
-      toast.error("Something went wrong. Please try again.");
-      setLikedByUser(!likedByUser);
-    },
-  });
-
-  useEffect(() => {
-    setLikes(likeCount === 0 ? "" : likeCount === 1 ? "like" : "likes");
-  }, [likeCount]);
-
-  const handleToggleLikeCount = () => {
-    if (!session) {
-      toast("Not logged in?", {
-        description: "You must be logged in to like a post.",
-        action: {
-          label: "Sign In",
-          onClick: () => router.push("/api/auth/signin"),
-        },
-      });
-
-      return;
-    }
-
-    setLikedByUser(!likedByUser);
-    setLikeCount(likedByUser ? likeCount - 1 : likeCount + 1);
-
-    toggleLike.mutate({ postId: post.id });
-  };
-
-  const repliesWord =
-    post.replies === 0 ? "" : post.replies === 1 ? "reply" : "replies";
-
-  const handleReply = () => {
-    if (!session) {
-      toast("Not logged in?", {
-        description: "You must be logged in to like a post.",
-        action: {
-          label: "Sign In",
-          onClick: () => router.push("/api/auth/signin"),
-        },
-      });
-
-      return;
-    }
-
-    toggleCommentFormIsOpen(post);
-
-    toggleLike.mutate({ postId: post.id });
-  };
 
   const userSlug = post.author.username
     ? "@" + post.author.username
@@ -190,7 +128,7 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
                   <DialogTrigger asChild className="cursor-pointer">
                     <AspectRatio
                       ratio={16 / 9}
-                      className="mt-2 rounded-md bg-muted"
+                      className="my-3 rounded-md bg-muted"
                     >
                       <Image
                         src={post.imageLink}
@@ -212,68 +150,142 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
                         className="rounded-md object-cover"
                       />
                     </AspectRatio>
+                    <PostButtons post={post} postType={postType} />
                   </DialogContent>
                 </Dialog>
               )}
             </div>
 
-            {postType === "post" && (
-              <>
-                <div className="flex items-center justify-between">
-                  <div className="relative right-[0.4rem] mt-[6px] text-foreground">
-                    <button
-                      title="like"
-                      type="button"
-                      className="rounded-full p-[0.4rem] transition-colors duration-200 hover:bg-zinc-100"
-                      onClick={handleToggleLikeCount}
-                    >
-                      {likedByUser ? (
-                        <PiHeartFill className="transform text-2xl text-red-500 transition-transform active:scale-90" />
-                      ) : (
-                        <PiHeart className="transform text-2xl transition-transform active:scale-90" />
-                      )}
-                    </button>
-
-                    <button
-                      title="comment"
-                      type="button"
-                      className="rounded-full p-[0.4rem] transition-colors duration-200 hover:bg-zinc-100"
-                      onClick={handleReply}
-                    >
-                      <PiChatCircle className="text-2xl" />
-                    </button>
-                  </div>
-
-                  {post.params?.includes("donation") && (
-                    <DonationDrawer
-                      orgId={post.author.username ?? post.authorId}
-                    />
-                  )}
-                </div>
-
-                <div className="space-x-3">
-                  {!pathname.includes(post.id) && post.replies ? (
-                    <Link
-                      className="text-muted-foreground"
-                      href={`/user/${
-                        post.author.username ?? post.authorId
-                      }/post/${post.id}`}
-                    >
-                      {post.replies + " " + repliesWord}
-                    </Link>
-                  ) : null}
-                  <span
-                    className="cursor-pointer text-zinc-500"
-                    onClick={() => setLikesModalIsOpen(!likesModalIsOpen)}
-                  >
-                    {(likeCount ? likeCount : "") + " " + likes}
-                  </span>
-                </div>
-              </>
-            )}
+            <PostButtons post={post} postType={postType} />
           </div>
         </div>
       </div>
     </>
   );
 }
+
+const PostButtons = ({ post, postType }: PostItemProps) => {
+  const { data: session } = useSession();
+
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const toggleCommentFormIsOpen = useBoundStore(
+    (state) => state.modalActions.toggleCommentFormIsOpen,
+  );
+
+  const [likedByUser, setLikedByUser] = useState(post.likedByUser);
+  const [likeCount, setLikeCount] = useState(post.likes);
+  const [likes, setLikes] = useState(
+    likeCount === 0 ? "" : likeCount === 1 ? "like" : "likes",
+  );
+
+  const toggleLike = api.post.toggleLike.useMutation({
+    onError: () => {
+      toast.error("Something went wrong. Please try again.");
+      setLikedByUser(!likedByUser);
+    },
+  });
+
+  useEffect(() => {
+    setLikes(likeCount === 0 ? "" : likeCount === 1 ? "like" : "likes");
+  }, [likeCount]);
+
+  const handleToggleLikeCount = () => {
+    if (!session) {
+      toast("Not logged in?", {
+        description: "You must be logged in to like a post.",
+        action: {
+          label: "Sign In",
+          onClick: () => router.push("/api/auth/signin"),
+        },
+      });
+
+      return;
+    }
+
+    setLikedByUser(!likedByUser);
+    setLikeCount(likedByUser ? likeCount - 1 : likeCount + 1);
+
+    toggleLike.mutate({ postId: post.id });
+  };
+
+  const repliesWord =
+    post.replies === 0 ? "" : post.replies === 1 ? "reply" : "replies";
+
+  const handleReply = () => {
+    if (!session) {
+      toast("Not logged in?", {
+        description: "You must be logged in to like a post.",
+        action: {
+          label: "Sign In",
+          onClick: () => router.push("/api/auth/signin"),
+        },
+      });
+
+      return;
+    }
+
+    toggleCommentFormIsOpen(post);
+
+    toggleLike.mutate({ postId: post.id });
+  };
+
+  const [likesModalIsOpen, setLikesModalIsOpen] = useState(false);
+  likesModalIsOpen;
+
+  return (
+    postType === "post" && (
+      <>
+        <div className="flex items-center justify-between">
+          <div className="relative right-[0.4rem] mt-[6px] text-foreground">
+            <button
+              title="like"
+              type="button"
+              className="rounded-full p-[0.4rem] transition-colors duration-200 hover:bg-zinc-100"
+              onClick={handleToggleLikeCount}
+            >
+              {likedByUser ? (
+                <PiHeartFill className="transform text-2xl text-red-500 transition-transform active:scale-90" />
+              ) : (
+                <PiHeart className="transform text-2xl transition-transform active:scale-90" />
+              )}
+            </button>
+
+            <button
+              title="comment"
+              type="button"
+              className="rounded-full p-[0.4rem] transition-colors duration-200 hover:bg-zinc-100"
+              onClick={handleReply}
+            >
+              <PiChatCircle className="text-2xl" />
+            </button>
+          </div>
+
+          {post.params?.includes("donation") && (
+            <DonationDrawer orgId={post.author.username ?? post.authorId} />
+          )}
+        </div>
+
+        <div className="space-x-3">
+          {!pathname.includes(post.id) && post.replies ? (
+            <Link
+              className="text-muted-foreground"
+              href={`/user/${post.author.username ?? post.authorId}/post/${
+                post.id
+              }`}
+            >
+              {post.replies + " " + repliesWord}
+            </Link>
+          ) : null}
+          <span
+            className="cursor-pointer text-zinc-500"
+            onClick={() => setLikesModalIsOpen(!likesModalIsOpen)}
+          >
+            {(likeCount ? likeCount : "") + " " + likes}
+          </span>
+        </div>
+      </>
+    )
+  );
+};

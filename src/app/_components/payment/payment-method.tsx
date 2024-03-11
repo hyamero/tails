@@ -49,7 +49,7 @@ export function PaymentMethod() {
       },
     });
 
-  if (!isSuccess) return <PaymentSuccess />;
+  if (isSuccess) return <PaymentSuccess />;
 
   const handlePayment = () => {
     createDonation({
