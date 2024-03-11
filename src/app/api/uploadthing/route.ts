@@ -8,6 +8,6 @@ export const { GET, POST } = createRouteHandler({
   config: {
     uploadthingId: env.UPLOADTHING_APP_ID,
     uploadthingSecret: env.UPLOADTHING_SECRET,
-    callbackUrl: "https://tails-welfare.vercel.app/api/uploadthing/callback",
+    callbackUrl: "https://tails-welfare.vercel.app/api/uploadthing",
   },
 });
