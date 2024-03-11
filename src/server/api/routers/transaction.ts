@@ -27,4 +27,30 @@ export const transactionRouter = createTRPCRouter({
         orderBy: [desc(donations.createdAt)],
       });
     }),
+
+  getDonations: protectedProcedure
+    .input(
+      z.object({
+        recipientId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.query.donations.findMany({
+        where: eq(donations.recipientId, input.recipientId),
+        limit: 10,
+        columns: {
+          id: true,
+          amount: true,
+          createdAt: true,
+        },
+
+        with: {
+          donor: {
+            columns: {
+              username: true,
+            },
+          },
+        },
+      });
+    }),
 });
