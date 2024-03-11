@@ -32,7 +32,7 @@ export function CreatePost({ onProfilePage }: { onProfilePage?: boolean }) {
     return (
       <Dialog open={postFormIsOpen} onOpenChange={setPostFormIsOpen}>
         {!onProfilePage && <CreatePostTrigger user={session.user} />}
-        <DialogContent>
+        <DialogContent className="w-[90%] md:w-full">
           {/* Form Component */}
           <PostForm user={session.user} formType="post" />
         </DialogContent>

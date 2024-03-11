@@ -24,7 +24,6 @@ import {
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { BudgetStats } from "../payment/budget-stats";
 import { RecentDonations } from "../payment/recent-donations";
 
 export default function UserProfile({
@@ -74,7 +73,7 @@ export default function UserProfile({
 
   return (
     mounted && (
-      <main className={`container ${className}`}>
+      <main className={`w-full ${className}`}>
         <section className="mx-auto w-full max-w-xl">
           <div className="flex items-center justify-between py-5">
             <div>

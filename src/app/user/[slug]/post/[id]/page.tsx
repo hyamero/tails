@@ -39,7 +39,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   if (!post) return <p>Post not found.</p>;
 
   return (
-    <>
+    <div className="container">
       <CreateComment />
       <PostItem post={post as Post} />
       {post && (
@@ -48,6 +48,6 @@ export default async function Page({ params }: { params: { id: string } }) {
           <Feed postId={post?.id} />
         </div>
       )}
-    </>
+    </div>
   );
 }

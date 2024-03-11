@@ -128,7 +128,7 @@ export function EditUserModal({ user }: EditUserModalProps) {
           Edit Profile
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="w-[90%] rounded-md sm:w-full sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
           <DialogDescription>

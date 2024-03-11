@@ -48,7 +48,7 @@ export function CreateComment() {
 
   return (
     <Drawer open={commentFormIsOpen.isOpen} onOpenChange={setCommentFormIsOpen}>
-      <DrawerContent className="px-7 pb-20">
+      <DrawerContent className="space-y-5 px-7 pb-20">
         <PostItem postType="comment" post={commentFormIsOpen.post} />
 
         {/* Form Component */}

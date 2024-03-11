@@ -44,120 +44,115 @@ export function PostItem({ post, postType = "post" }: PostItemProps) {
     ? "@" + post.author.username
     : post.authorId;
 
-  const [likesModalIsOpen, setLikesModalIsOpen] = useState(false);
-  likesModalIsOpen;
-
   return (
     <>
-      <ViewLikes
-        postId={post.id}
-        likesModalIsOpen={likesModalIsOpen}
-        setLikesModalIsOpen={setLikesModalIsOpen}
-      />
       <div className="mx-auto flex w-full max-w-xl items-start justify-between rounded-sm border bg-background p-5">
-        <div className="flex w-full items-start gap-3">
-          <Link href={`/user/${userSlug}`} className="font-semibold">
-            <Avatar className="relative top-1">
-              <AvatarImage
-                className="rounded-full"
-                src={post.author.image as string | undefined}
-                alt={`${post.author.name}'s avatar`}
-              />
-              <AvatarFallback className="text-xs text-muted-foreground">
-                {post.author.name?.split(" ").at(0)}
-              </AvatarFallback>
-            </Avatar>
-          </Link>
-
-          <div className="w-full">
-            <div className="flex justify-between">
-              <ProfileHoverCard author={post.author} userId={session?.user.id}>
-                <Link
-                  href={`/user/${userSlug}`}
-                  className="font-semibold text-foreground hover:underline"
-                >
-                  {post.author.name}
-                </Link>
-              </ProfileHoverCard>
-
-              <div className="flex items-center gap-2">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <span className="select-none text-muted-foreground">
-                        {formatDistanceToNowStrict(post.createdAt, {
-                          addSuffix: false,
-                          locale: {
-                            formatDistance: (...props) =>
-                              formatDistance(...props),
-                          },
-                        })}
-                      </span>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <span>{formatRelative(post.createdAt, new Date())}</span>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                {/* 
-               DropDownMenu
-              */}
-                {postType === "post" && (
-                  <PostDropdownMenu
-                    postId={post.id}
-                    postAuthor={post.authorId}
+        <div className="flex w-full flex-col gap-3">
+          <div className="flex justify-between">
+            <div className="flex items-center gap-2">
+              <Link href={`/user/${userSlug}`} className="font-semibold">
+                <Avatar>
+                  <AvatarImage
+                    className="rounded-full"
+                    src={post.author.image as string | undefined}
+                    alt={`${post.author.name}'s avatar`}
                   />
-                )}
+                  <AvatarFallback className="text-xs text-muted-foreground">
+                    {post.author.name?.split(" ").at(0)}
+                  </AvatarFallback>
+                </Avatar>
+              </Link>
+
+              <div>
+                <ProfileHoverCard
+                  author={post.author}
+                  userId={session?.user.id}
+                >
+                  <Link
+                    href={`/user/${userSlug}`}
+                    className="font-semibold text-foreground hover:underline"
+                  >
+                    {post.author.name}
+                  </Link>
+                </ProfileHoverCard>
+                <p className="text-xs text-muted-foreground">Description...</p>
               </div>
             </div>
 
-            <div>
-              {!pathname.includes("/post") && postType === "post" ? (
-                <Link
-                  href={`/user/${userSlug}/post/${post.id}`}
-                  className="whitespace-pre-wrap text-foreground"
-                >
-                  {post.content}
-                </Link>
-              ) : (
-                <p className="whitespace-pre-wrap">{post.content}</p>
-              )}
-
-              {post.imageLink && (
-                <Dialog>
-                  <DialogTrigger asChild className="cursor-pointer">
-                    <AspectRatio
-                      ratio={16 / 9}
-                      className="my-3 rounded-md bg-muted"
-                    >
-                      <Image
-                        src={post.imageLink}
-                        alt="post image"
-                        fill
-                        className="rounded-md object-cover"
-                      />
-                    </AspectRatio>
-                  </DialogTrigger>
-                  <DialogContent className="w-screen max-w-[50%]">
-                    <AspectRatio
-                      ratio={16 / 9}
-                      className="mt-2 rounded-md bg-muted"
-                    >
-                      <Image
-                        src={post.imageLink}
-                        alt="post image"
-                        fill
-                        className="rounded-md object-cover"
-                      />
-                    </AspectRatio>
-                    <PostButtons post={post} postType={postType} />
-                  </DialogContent>
-                </Dialog>
+            <div className="flex items-center gap-2">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <span className="select-none text-muted-foreground">
+                      {formatDistanceToNowStrict(post.createdAt, {
+                        addSuffix: false,
+                        locale: {
+                          formatDistance: (...props) =>
+                            formatDistance(...props),
+                        },
+                      })}
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <span>{formatRelative(post.createdAt, new Date())}</span>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              {/* 
+               DropDownMenu
+              */}
+              {postType === "post" && (
+                <PostDropdownMenu postId={post.id} postAuthor={post.authorId} />
               )}
             </div>
-
-            <PostButtons post={post} postType={postType} />
           </div>
+
+          <div>
+            {!pathname.includes("/post") && postType === "post" ? (
+              <Link
+                href={`/user/${userSlug}/post/${post.id}`}
+                className="whitespace-pre-wrap text-foreground"
+              >
+                {post.content}
+              </Link>
+            ) : (
+              <p className="whitespace-pre-wrap">{post.content}</p>
+            )}
+
+            {post.imageLink && (
+              <Dialog>
+                <DialogTrigger asChild className="cursor-pointer">
+                  <AspectRatio
+                    ratio={16 / 9}
+                    className="my-3 rounded-md bg-muted"
+                  >
+                    <Image
+                      src={post.imageLink}
+                      alt="post image"
+                      fill
+                      className="rounded-md object-cover"
+                    />
+                  </AspectRatio>
+                </DialogTrigger>
+                <DialogContent className="w-screen max-w-[80%] rounded-md xl:max-w-[60%]">
+                  <AspectRatio
+                    ratio={16 / 9}
+                    className="mt-2 rounded-md bg-muted"
+                  >
+                    <Image
+                      src={post.imageLink}
+                      alt="post image"
+                      fill
+                      className="rounded-md object-cover"
+                    />
+                  </AspectRatio>
+                  <PostButtons post={post} postType={postType} />
+                </DialogContent>
+              </Dialog>
+            )}
+          </div>
+
+          <PostButtons post={post} postType={postType} />
         </div>
       </div>
     </>
@@ -237,6 +232,12 @@ const PostButtons = ({ post, postType }: PostItemProps) => {
   return (
     postType === "post" && (
       <>
+        <ViewLikes
+          postId={post.id}
+          likesModalIsOpen={likesModalIsOpen}
+          setLikesModalIsOpen={setLikesModalIsOpen}
+        />
+
         <div className="flex items-center justify-between">
           <div className="relative right-[0.4rem] mt-[6px] text-foreground">
             <button

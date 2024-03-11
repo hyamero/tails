@@ -53,7 +53,7 @@ export default async function RootLayout({
           <AuthProvider session={session}>
             <Navbar sessionUser={sessionUser} />
             <LoginModal />
-            <div className="pt-24">{children}</div>
+            <div className="container pt-24">{children}</div>
           </AuthProvider>
         </TRPCReactProvider>
       </body>

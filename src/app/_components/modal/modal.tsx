@@ -43,7 +43,7 @@ export function Modal({
 }: ModalProps) {
   return (
     <Dialog open={modalState} onOpenChange={modalAction}>
-      <DialogContent>
+      <DialogContent className="w-[90%] rounded-md">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
