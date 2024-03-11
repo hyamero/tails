@@ -9,9 +9,11 @@ import {
   AvatarFallback,
 } from "~/app/_components/ui/avatar";
 
-import { type User } from "~/lib/types";
 import { Feed } from "~/app/_components/post/feed";
 import { EditUserModal } from "./edit-profile-modal";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { type User } from "~/lib/types";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 
@@ -22,9 +24,16 @@ import {
   TabsTrigger,
 } from "~/app/_components/ui/tabs";
 
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "../ui/accordion";
+
 import { RecentDonations } from "../payment/recent-donations";
+import { CreateAnimalListings } from "../adopt/adopt-form";
+import { AnimalListings } from "../adopt/animal-listings";
 
 export default function UserProfile({
   user,
@@ -117,6 +126,7 @@ export default function UserProfile({
             </div>
           )}
           <TabsContents
+            isCurrentUser={isCurrentUser}
             username={user.username}
             userId={user.id}
             userType={user.userType}
@@ -131,10 +141,12 @@ const TabsContents = ({
   userId,
   userType,
   username,
+  isCurrentUser,
 }: {
   userId: string;
   userType: User["userType"];
-  username: string;
+  username: string | null;
+  isCurrentUser: boolean;
 }) => {
   const userContents = [
     {
@@ -170,8 +182,26 @@ const TabsContents = ({
     },
     {
       component: () => (
-        <div className="flex justify-center pt-10 text-xl font-semibold">
-          Coming soon!
+        <div>
+          {isCurrentUser && (
+            <Accordion
+              type="single"
+              defaultValue="stats"
+              collapsible
+              className="w-full"
+            >
+              <AccordionItem value="stats">
+                <AccordionTrigger className="px-4 font-semibold text-foreground">
+                  {" "}
+                  Add New Animal
+                </AccordionTrigger>
+                <AccordionContent>
+                  <CreateAnimalListings />
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          )}
+          <AnimalListings owner={username!} />
         </div>
       ),
       value: "fosters",
@@ -181,7 +211,7 @@ const TabsContents = ({
   const contents = userType === "user" ? userContents : orgContents;
 
   return (
-    <Tabs defaultValue="posts" className="mt-5 w-full">
+    <Tabs defaultValue="posts" className="mt-5 w-full pb-28">
       <TabsList className="w-full border-b">
         {contents.map((tab) => (
           <TabsTrigger
