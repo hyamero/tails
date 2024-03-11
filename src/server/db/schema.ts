@@ -34,7 +34,7 @@ export const posts = createTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
-    imgUrl: varchar("imgUrl", { length: 255 }),
+    imgUrl: varchar("imageLink", { length: 255 }),
     params: varchar("params", { length: 255 }),
   },
   (post) => ({
