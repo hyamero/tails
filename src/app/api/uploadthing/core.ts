@@ -6,7 +6,7 @@ export const ourFileRouter = {
     .middleware(async () => {
       return { message: "Upload complete!" };
     })
-    .onUploadComplete(async ({ file }) => {
+    .onUploadComplete(({ file }) => {
       return { image: file };
     }),
 } satisfies FileRouter;
