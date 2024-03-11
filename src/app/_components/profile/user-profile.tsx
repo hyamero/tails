@@ -32,7 +32,7 @@ import {
 } from "../ui/accordion";
 
 import { RecentDonations } from "../payment/recent-donations";
-import { CreateAnimalListings } from "../adopt/adopt-form";
+import { CreateAnimalListings } from "../adopt/animal-form";
 import { AnimalListings } from "../adopt/animal-listings";
 
 export default function UserProfile({
