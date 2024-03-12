@@ -181,12 +181,7 @@ export function CreateAnimalListings() {
             />
           </AspectRatio>
         )}
-        <Button
-          disabled={!imgUrl}
-          title="submit"
-          type="submit"
-          className="w-full"
-        >
+        <Button title="submit" type="submit" className="w-full">
           {isLoading ? "Saving..." : "Save"}
         </Button>
       </form>

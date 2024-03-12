@@ -18,7 +18,7 @@ export function AnimalListings({ owner }: { owner: string }) {
   });
 
   return (
-    <div className="w-full">
+    <div className="w-full space-y-3">
       {animals.data?.map((animal) => (
         <Card key={animal.id}>
           <CardHeader>
